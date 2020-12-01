@@ -48,8 +48,8 @@ module.exports = function (ctx) {
       env: {
         API: ctx.dev
           // ? 'http://localhost:9879/v1'
-          ? 'http://api.cy66688.cn/v1'
-          : 'http://api.cy66688.cn/v1'
+          ? 'http://wx.yp5588.cn'
+          : 'http://wx.yp5588.cn'
       },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
