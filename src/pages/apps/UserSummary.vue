@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="row items-center q-pb-md">
       <q-form class="q-gutter-lg">
-        <q-input type="textarea" filled label="指定的公众号APPID" v-model="appids" hint="不填则统计所有公众号，多个公众号以':'号分割"/>
+        <q-input type="textarea" filled label="指定的公众号APPID" v-model="params.Appids" hint="不填则统计所有公众号，多个公众号以':'号分割"/>
         <q-input filled v-model="params.BeginDate" label="开始日期">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
