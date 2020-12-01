@@ -181,9 +181,13 @@ export default {
         params.BeginDate = endDate
       }
       if (this.params.Appids) {
-        params.Appids = this.params.Appids.split(':')
-        for (let i = 0; i < params.Appids.length; i++) {
-          params.Appids[i] = params.Appids[i].trim()
+        params.Appids = []
+        const appids = this.params.Appids.split(':')
+        for (let i = 0; i < appids.length; i++) {
+          const appid = appids[i].trim()
+          if (appid) {
+            params.Appids.push(appid)
+          }
         }
       }
       this.$axios.get('/user-summary', { params: params }).then(data => {

@@ -4,10 +4,16 @@
   </div>
 </template>
 <script>
+import Qs from 'qs'
 export default {
   name: 'App',
   created () {
-    this.$axios.defaults.baseURL = process.env.API
+    this.$axios({
+      baseURL: process.env.API,
+      paramsSerializer (params) {
+        return Qs.stringify(params, { indices: false })
+      }
+    })
     const token = localStorage.getItem('Authorization')
     if (token) {
       this.$axios.defaults.headers.common.Authorization = token
