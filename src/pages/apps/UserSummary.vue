@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <div class="row items-center q-pb-md">
-      <q-form class="q-gutter-lg">
+    <div class="row items-center q-mb-lg">
+      <q-form class="row q-gutter-lg">
         <q-input type="textarea" filled label="指定的公众号APPID" v-model="params.Appids" hint="不填则统计所有公众号，多个公众号以':'号分割"/>
         <q-input filled v-model="params.BeginDate" label="开始日期">
           <template v-slot:append>
@@ -29,7 +29,8 @@
             </q-icon>
           </template>
         </q-input>
-        <div>
+        <q-space/>
+        <div class="row items-center">
           <q-btn label="获取统计" type="submit" color="primary" @click="getSummary"/>
         </div>
       </q-form>
@@ -181,6 +182,9 @@ export default {
       }
       if (this.params.Appids) {
         params.Appids = this.params.Appids.split(':')
+        for (let i = 0; i < params.Appids.length; i++) {
+          params.Appids[i] = params.Appids[i].trim()
+        }
       }
       this.$axios.get('/user-summary', { params: params }).then(data => {
         data = data.data
