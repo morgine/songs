@@ -234,18 +234,23 @@ export default {
     }
   },
   created () {
-    this.$axios.get('/admin/info').then(data => {
+    this.$axios.get('/info').then(data => {
       data = data.data
       if (data && data.Data) {
         this.admin = data.Data
       } else {
         this.$router.push('/login')
       }
+    }).catch(() => {
+      this.$router.push('/login')
     })
   },
   methods: {
     logout () {
       this.$axios.get('/logout').then(_ => {
+        localStorage.removeItem('Authorization')
+        this.$router.push('/login')
+      }).catch(() => {
         localStorage.removeItem('Authorization')
         this.$router.push('/login')
       })

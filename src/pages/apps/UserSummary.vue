@@ -1,8 +1,8 @@
 <template>
-  <q-page padding>
+  <q-page padding class="column q-gutter-lg">
     <div class="row items-center q-mb-lg">
       <q-form class="row q-gutter-lg">
-        <q-input type="textarea" filled label="指定的公众号APPID" v-model="params.Appids" hint="不填则统计所有公众号，多个公众号以':'号分割"/>
+        <q-input type="textarea" filled label="指定的公众号APPID" v-model="params.Appids" hint="不填则统计所有公众号，多个公众号以换行分割"/>
         <q-input filled v-model="params.BeginDate" label="开始日期">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -37,7 +37,7 @@
     </div>
     <q-table
       title="统计总量"
-      :data="summaries.Total"
+      :data="summaries.Total?summaries.Total:[]"
       :columns="totalColumns"
       row-key="RefDate"
       :loading="loading"
@@ -48,7 +48,7 @@
           icon-right="archive"
           label="导出 csv"
           no-caps
-          @click="exportTable(`总量-${model.from}-${model.to}`, summaries.Total, totalColumns)"
+          @click="exportTable(`总量-${params.BeginDate}-${params.EndDate}`, summaries.Total, totalColumns)"
         />
       </template>
     </q-table>
@@ -56,12 +56,12 @@
       v-for="app in summaries.AppSummaries"
       :key="app.Appid"
       :title="app.Nickname"
-      :data="app.Summaries"
+      :data="app.Summaries?app.Summaries:[]"
       :columns="totalColumns"
-      row-key="RefDate"
+      row-key="ref_date"
     >
       <template v-slot:top-right>
-        <span v-if="app.Err" class="text-red text-subtitle1">
+        <span v-if="app.Err" class="text-grey text-subtitle1 q-mr-lg">
           {{ app.Err }}
         </span>
         <q-btn
@@ -125,6 +125,13 @@ export default {
           field: 'ref_date'
         },
         {
+          name: 'user_source',
+          align: 'right',
+          label: '来源',
+          field: 'user_source',
+          format: val => this.userSources[val]
+        },
+        {
           name: 'new_user',
           align: 'right',
           label: '新增用户',
@@ -141,21 +148,32 @@ export default {
           align: 'right',
           label: '净增用户',
           field: row => row.new_user - row.cancel_user
-        },
-        {
-          name: 'cumulate_user',
-          align: 'right',
-          label: '用户总量',
-          field: 'cumulate_user'
         }
+        // {
+        //   name: 'cumulate_user',
+        //   align: 'right',
+        //   label: '用户总量',
+        //   field: 'cumulate_user'
+        // }
       ],
       summaries: {
         Total: [/* Summary */],
         AppSummaries: [/* AppSummary */]
       },
+      userSources: {
+        0: '其他合计',
+        1: '公众号搜索',
+        17: '名片分享',
+        30: '扫描二维码',
+        51: '支付后关注',
+        57: '文章内账号名称',
+        100: '微信广告',
+        161: '他人转载',
+        176: '专辑页内账号名称'
+      },
       Summary: {
         ref_date: '', // 数据的日期
-        // UserSource: 0, // 用户的渠道，数值代表的含义如下： 0代表其他合计 1代表公众号搜索 17代表名片分享 30代表扫描二维码 51代表支付后关注（在支付完成页） 57代表文章内账号名称 100微信广告 161他人转载 176 专辑页内账号名称
+        user_source: 0, // 用户的渠道，数值代表的含义如下： 0代表其他合计 1代表公众号搜索 17代表名片分享 30代表扫描二维码 51代表支付后关注（在支付完成页） 57代表文章内账号名称 100微信广告 161他人转载 176 专辑页内账号名称
         new_user: 0, // 新增的用户数量
         cancel_user: 0, // 取消关注的用户数量，new_user减去cancel_user即为净增用户数量
         cumulate_user: 0 // 总用户量
@@ -182,7 +200,7 @@ export default {
       }
       if (this.params.Appids) {
         params.Appids = []
-        const appids = this.params.Appids.split(':')
+        const appids = this.params.Appids.split('\n')
         for (let i = 0; i < appids.length; i++) {
           const appid = appids[i].trim()
           if (appid) {
