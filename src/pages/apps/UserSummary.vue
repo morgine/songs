@@ -1,17 +1,38 @@
 <template>
   <q-page padding>
     <div class="row items-center q-pb-md">
-      <div>选择时间：</div>
-      <q-btn icon="event" :label="`${model.from} - ${model.to}`" outline>
-        <q-popup-proxy transition-show="scale" transition-hide="scale">
-          <q-date v-model="model" range mask="YYYY-MM-DD" :options="optionsFn">
-            <div class="row items-center justify-end q-gutter-sm">
-              <q-btn label="取 消" flat v-close-popup/>
-              <q-btn label="确 定" color="primary" flat @click="getSummary" v-close-popup/>
-            </div>
-          </q-date>
-        </q-popup-proxy>
-      </q-btn>
+      <q-form class="q-gutter-lg">
+        <q-input type="textarea" filled label="指定的公众号APPID" v-model="appids" hint="不填则统计所有公众号，多个公众号以':'号分割"/>
+        <q-input filled v-model="params.BeginDate" label="开始日期">
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy transition-show="scale" transition-hide="scale">
+                <q-date v-model="params.BeginDate" mask="YYYY-MM-DD">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat/>
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+        <q-input filled v-model="params.EndDate" label="结束日期">
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy transition-show="scale" transition-hide="scale">
+                <q-date v-model="params.EndDate" mask="YYYY-MM-DD">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat/>
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+        <div>
+          <q-btn label="获取统计" type="submit" color="primary" @click="getSummary"/>
+        </div>
+      </q-form>
     </div>
     <q-table
       title="统计总量"
@@ -40,7 +61,7 @@
     >
       <template v-slot:top-right>
         <span v-if="app.Err" class="text-red text-subtitle1">
-          {{app.Err}}
+          {{ app.Err }}
         </span>
         <q-btn
           color="primary"
@@ -55,11 +76,10 @@
 </template>
 
 <script>
-import { exportFile, date } from 'quasar'
+import { date, exportFile } from 'quasar'
 
 const timeStamp = Date.now()
 const nowDate = date.formatDate(timeStamp, 'YYYY-MM-DD')
-const nowDateCompare = date.formatDate(timeStamp, 'YYYY/MM/DD')
 const oneDate = 1000 * 60 * 60 * 24
 const prevDate = date.formatDate(timeStamp - oneDate, 'YYYY-MM-DD')
 
@@ -89,44 +109,43 @@ export default {
   name: 'UserSummary',
   data () {
     return {
-      model: {
-        appids: [],
-        from: prevDate,
-        to: nowDate
+      params: {
+        Appids: '',
+        BeginDate: prevDate,
+        EndDate: nowDate
       },
       loading: false,
       expanded: false,
       totalColumns: [
         {
-          name: 'RefDate',
+          name: 'ref_date',
           align: 'right',
           label: '日期',
-          field: 'RefDate'
+          field: 'ref_date'
         },
         {
-          name: 'NewUser',
+          name: 'new_user',
           align: 'right',
           label: '新增用户',
-          field: 'NewUser'
+          field: 'new_user'
         },
         {
-          name: 'CancelUser',
+          name: 'cancel_user',
           align: 'right',
           label: '取关用户',
-          field: 'CancelUser'
+          field: 'cancel_user'
         },
         {
-          name: 'PositiveUser',
+          name: 'positive_user',
           align: 'right',
           label: '净增用户',
-          field: row => row.NewUser - row.CancelUser,
-          format: val => `${val}`
+          field: row => row.new_user - row.cancel_user
         },
         {
-          name: 'CumulateUser',
+          name: 'cumulate_user',
           align: 'right',
           label: '用户总量',
-          field: 'CumulateUser'
+          field: 'cumulate_user'
         }
       ],
       summaries: {
@@ -134,11 +153,11 @@ export default {
         AppSummaries: [/* AppSummary */]
       },
       Summary: {
-        RefDate: '', // 数据的日期
+        ref_date: '', // 数据的日期
         // UserSource: 0, // 用户的渠道，数值代表的含义如下： 0代表其他合计 1代表公众号搜索 17代表名片分享 30代表扫描二维码 51代表支付后关注（在支付完成页） 57代表文章内账号名称 100微信广告 161他人转载 176 专辑页内账号名称
-        NewUser: 0, // 新增的用户数量
-        CancelUser: 0, // 取消关注的用户数量，new_user减去cancel_user即为净增用户数量
-        CumulateUser: 0 // 总用户量
+        new_user: 0, // 新增的用户数量
+        cancel_user: 0, // 取消关注的用户数量，new_user减去cancel_user即为净增用户数量
+        cumulate_user: 0 // 总用户量
       },
       AppSummary: {
         Appid: '',
@@ -148,17 +167,21 @@ export default {
       }
     }
   },
-  created () {
-
-  },
   methods: {
     getSummary () {
-      const params = {
-        Appids: this.model.appids,
-        BeginDate: this.model.from,
-        EndDate: this.model.to
-      }
       this.loading = true
+      const params = {
+        BeginDate: this.params.BeginDate,
+        EndDate: this.params.EndDate
+      }
+      if (params.BeginDate > params.EndDate) {
+        const endDate = params.EndDate
+        params.EndDate = params.BeginDate
+        params.BeginDate = endDate
+      }
+      if (this.params.Appids) {
+        params.Appids = this.params.Appids.split(':')
+      }
       this.$axios.get('/user-summary', { params: params }).then(data => {
         data = data.data
         if (data && data.Data) {
@@ -168,9 +191,6 @@ export default {
         }
         this.loading = false
       })
-    },
-    optionsFn (date) {
-      return date <= nowDateCompare
     },
     exportTable (filename, data, columns) {
       // naive encoding to csv format
