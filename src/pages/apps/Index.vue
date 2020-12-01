@@ -155,12 +155,14 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.$q.notify('操作中...')
+        this.loading = true
         this.$axios.get('/reset-apps').then(data => {
           data = data.data
           if (data.Message) {
             this.$q.notify(data.Message)
           }
+          this.loading = false
+          this.count()
         })
       }).onOk(() => {
         // console.log('>>>> second OK catcher')

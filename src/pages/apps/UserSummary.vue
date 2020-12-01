@@ -7,7 +7,7 @@
           <q-date v-model="model" range mask="YYYY-MM-DD" :options="optionsFn">
             <div class="row items-center justify-end q-gutter-sm">
               <q-btn label="取 消" flat v-close-popup/>
-              <q-btn label="确 定" color="primary" flat @click="getSummary" v-close-popup :loading="loading"/>
+              <q-btn label="确 定" color="primary" flat @click="getSummary" v-close-popup/>
             </div>
           </q-date>
         </q-popup-proxy>
@@ -18,6 +18,7 @@
       :data="summaries.Total"
       :columns="totalColumns"
       row-key="RefDate"
+      :loading="loading"
     >
       <template v-slot:top-right>
         <q-btn
@@ -38,6 +39,9 @@
       row-key="RefDate"
     >
       <template v-slot:top-right>
+        <span v-if="app.Err" class="text-red text-subtitle1">
+          {{app.Err}}
+        </span>
         <q-btn
           color="primary"
           icon-right="archive"
@@ -139,6 +143,7 @@ export default {
       AppSummary: {
         Appid: '',
         Nickname: '',
+        Err: '',
         Summaries: []
       }
     }
