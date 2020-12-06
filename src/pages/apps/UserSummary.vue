@@ -80,9 +80,9 @@
 import { date, exportFile } from 'quasar'
 
 const timeStamp = Date.now()
-const nowDate = date.formatDate(timeStamp, 'YYYY-MM-DD')
 const oneDate = 1000 * 60 * 60 * 24
-const prevDate = date.formatDate(timeStamp - oneDate, 'YYYY-MM-DD')
+const nowDate = date.formatDate(timeStamp - oneDate, 'YYYY-MM-DD')
+const prevDate = date.formatDate(timeStamp - (2 * oneDate), 'YYYY-MM-DD')
 
 function wrapCsvValue (val, formatFn) {
   // eslint-disable-next-line no-void
