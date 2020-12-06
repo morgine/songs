@@ -142,10 +142,10 @@
         <q-item
           clickable
           v-ripple
-          :active="link === 'summary'"
-          @click="link = 'summary'"
+          :active="link === 'statistics'"
+          @click="link = 'statistics'"
           active-class="my-menu-link"
-          to="/summary"
+          to="/statistics"
         >
           <q-item-section avatar>
             <q-icon name="send"/>

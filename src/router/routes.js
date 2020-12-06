@@ -1,4 +1,3 @@
-
 const routes = [
   {
     path: '/',
@@ -9,6 +8,7 @@ const routes = [
       { path: '/dashboard', component: () => import('pages/Dashboard.vue') },
       { path: '/apps', component: () => import('pages/apps/Index.vue') },
       { path: '/summary', component: () => import('pages/apps/UserSummary.vue') },
+      { path: '/statistics', component: () => import('pages/user/Statistics.vue') },
       { path: '/advert', component: () => import('pages/advert/Index.vue') }
     ]
   },
