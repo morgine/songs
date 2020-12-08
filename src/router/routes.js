@@ -7,9 +7,12 @@ const routes = [
       { path: '/settings', component: () => import('pages/admin/Settings.vue') },
       { path: '/dashboard', component: () => import('pages/Dashboard.vue') },
       { path: '/apps', component: () => import('pages/apps/Index.vue') },
+      { path: '/user-tag', component: () => import('pages/apps/Tag.vue') },
       { path: '/summary', component: () => import('pages/apps/UserSummary.vue') },
       { path: '/statistics', component: () => import('pages/user/Statistics.vue') },
-      { path: '/advert', component: () => import('pages/advert/Index.vue') }
+      { path: '/advert', component: () => import('pages/advert/Index.vue') },
+      { path: '/pictures', component: () => import('pages/images/Images.vue') },
+      { path: '/subscribes', component: () => import('pages/subscribes/Index.vue') }
     ]
   },
 

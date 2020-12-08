@@ -4,13 +4,16 @@
       title="公众号列表"
       :data="data"
       :columns="columns"
-      row-key="id"
+      row-key="Appid"
       :pagination.sync="pagination"
       :loading="loading"
       @request="onRequest"
+      selection="multiple"
+      :selected.sync="selected"
       binary-state-sort
     >
       <template v-slot:top-right>
+        <q-btn flat @click="delApps" :disable="selected.length === 0">删除公众号</q-btn>
         <q-btn flat @click="resetApp">拉取公众号</q-btn>
         <q-btn flat @click="addApp">添加公众号</q-btn>
       </template>
@@ -89,7 +92,8 @@ export default {
         }
       ],
       data: [],
-      original: []
+      original: [],
+      selected: []
     }
   },
   mounted () {
@@ -108,7 +112,12 @@ export default {
       })
     },
     onRequest (props) {
-      const { page, rowsPerPage, sortBy, descending } = props.pagination
+      const {
+        page,
+        rowsPerPage,
+        sortBy,
+        descending
+      } = props.pagination
 
       this.loading = true
       const startRow = (page - 1) * rowsPerPage
@@ -145,6 +154,21 @@ export default {
         data = data.data
         if (data && data.Data) {
           window.open(data.Data, '_blank')
+        }
+      })
+    },
+    delApps () {
+      const params = []
+      for (const app of this.selected) {
+        params.push(app.ID)
+      }
+      this.loading = true
+      this.$axios.delete('/apps', { params: { IDs: params } }).then(data => {
+        data = data.data
+        if (data && data.Message) {
+          this.$q.notify(data.Message)
+          this.loading = false
+          this.count()
         }
       })
     },

@@ -142,6 +142,20 @@
         <q-item
           clickable
           v-ripple
+          :active="link === 'user-tag'"
+          @click="link = 'user-tag'"
+          active-class="my-menu-link"
+          to="/user-tag"
+        >
+          <q-item-section avatar>
+            <q-icon name="send"/>
+          </q-item-section>
+
+          <q-item-section>关注标签</q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
           :active="link === 'statistics'"
           @click="link = 'statistics'"
           active-class="my-menu-link"
@@ -167,50 +181,76 @@
 
           <q-item-section>广告统计</q-item-section>
         </q-item>
+        <q-item
+          clickable
+          v-ripple
+          :active="link === 'pictures'"
+          @click="link = 'pictures'"
+          active-class="my-menu-link"
+          to="/pictures"
+        >
+          <q-item-section avatar>
+            <q-icon name="send"/>
+          </q-item-section>
+          <q-item-section>图片管理</q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-ripple
+          :active="link === 'subscribes'"
+          @click="link = 'subscribes'"
+          active-class="my-menu-link"
+          to="/subscribes"
+        >
+          <q-item-section avatar>
+            <q-icon name="send"/>
+          </q-item-section>
+          <q-item-section>关注回复</q-item-section>
+        </q-item>
 
-<!--        <q-item-->
-<!--          clickable-->
-<!--          v-ripple-->
-<!--          :active="link === 'trash'"-->
-<!--          @click="link = 'trash'"-->
-<!--          active-class="my-menu-link"-->
-<!--        >-->
-<!--          <q-item-section avatar>-->
-<!--            <q-icon name="delete"/>-->
-<!--          </q-item-section>-->
+        <!--        <q-item-->
+        <!--          clickable-->
+        <!--          v-ripple-->
+        <!--          :active="link === 'trash'"-->
+        <!--          @click="link = 'trash'"-->
+        <!--          active-class="my-menu-link"-->
+        <!--        >-->
+        <!--          <q-item-section avatar>-->
+        <!--            <q-icon name="delete"/>-->
+        <!--          </q-item-section>-->
 
-<!--          <q-item-section>Trash</q-item-section>-->
-<!--        </q-item>-->
+        <!--          <q-item-section>Trash</q-item-section>-->
+        <!--        </q-item>-->
 
-<!--        <q-separator spaced/>-->
+        <!--        <q-separator spaced/>-->
 
-<!--        <q-item-->
-<!--          clickable-->
-<!--          v-ripple-->
-<!--          :active="link === 'settings'"-->
-<!--          @click="link = 'settings'"-->
-<!--          active-class="my-menu-link"-->
-<!--        >-->
-<!--          <q-item-section avatar>-->
-<!--            <q-icon name="settings"/>-->
-<!--          </q-item-section>-->
+        <!--        <q-item-->
+        <!--          clickable-->
+        <!--          v-ripple-->
+        <!--          :active="link === 'settings'"-->
+        <!--          @click="link = 'settings'"-->
+        <!--          active-class="my-menu-link"-->
+        <!--        >-->
+        <!--          <q-item-section avatar>-->
+        <!--            <q-icon name="settings"/>-->
+        <!--          </q-item-section>-->
 
-<!--          <q-item-section>Settings</q-item-section>-->
-<!--        </q-item>-->
+        <!--          <q-item-section>Settings</q-item-section>-->
+        <!--        </q-item>-->
 
-<!--        <q-item-->
-<!--          clickable-->
-<!--          v-ripple-->
-<!--          :active="link === 'help'"-->
-<!--          @click="link = 'help'"-->
-<!--          active-class="my-menu-link"-->
-<!--        >-->
-<!--          <q-item-section avatar>-->
-<!--            <q-icon name="help"/>-->
-<!--          </q-item-section>-->
+        <!--        <q-item-->
+        <!--          clickable-->
+        <!--          v-ripple-->
+        <!--          :active="link === 'help'"-->
+        <!--          @click="link = 'help'"-->
+        <!--          active-class="my-menu-link"-->
+        <!--        >-->
+        <!--          <q-item-section avatar>-->
+        <!--            <q-icon name="help"/>-->
+        <!--          </q-item-section>-->
 
-<!--          <q-item-section>Help</q-item-section>-->
-<!--        </q-item>-->
+        <!--          <q-item-section>Help</q-item-section>-->
+        <!--        </q-item>-->
       </q-list>
     </q-drawer>
 
