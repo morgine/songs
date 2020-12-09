@@ -6,7 +6,7 @@
       <div>
         <a href="javascript: void(0)" @click="$refs['image-selector'].openDialog()">
           <q-img
-            :src="card.ThumbMediaFilename?`/picture/${card.ThumbMediaFilename}`:''"
+            :src="card.ThumbMediaFilename?`/v1/picture/${card.ThumbMediaFilename}`:''"
             width="100px"
             height="120px"
           >

@@ -24,7 +24,7 @@
             :key="image.ID"
             class="column col-sm-12 col-md-6 col-lg-4 col-xl-3"
           >
-            <q-img :src="`/picture/${image.File}`" style="width: 100%;height: 100%">
+            <q-img :src="`/v1/picture/${image.File}`" style="width: 100%;height: 100%">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center">
                   error!
