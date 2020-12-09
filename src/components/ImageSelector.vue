@@ -22,16 +22,16 @@
           <div
             v-for="(image, key) in images"
             :key="image.ID"
-            class="column col-sm-12 col-md-6 col-lg-4 col-xl-3"
+            class="column col-sm-6 col-md-4 col-lg-3 col-xl-3"
           >
-            <q-img :src="`/v1/picture/${image.File}`" style="width: 100%;height: 100%">
+            <q-img class="col" :src="`/v1/picture/${image.File}`">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center">
                   error!
                 </div>
               </template>
             </q-img>
-            <div class="flex justify-around">
+            <div class="col">
               <q-btn icon="delete" @click="delImage(image.ID, key)"></q-btn>
               <q-btn icon="check" @click="selected = image.File"></q-btn>
             </div>
