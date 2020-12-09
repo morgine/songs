@@ -1,20 +1,5 @@
 <template>
   <q-page padding>
-    <q-form @submit="uploadImage" class="row full-width">
-      <q-file
-        name="picture"
-        v-model="files"
-        filled
-        multiple
-        use-chips
-        label="选择上传文件"
-        accept=".jpg, .png, image/*"
-        class="col-8"
-      />
-      <div class="col-3 row items-center q-ml-lg">
-        <q-btn label="提交上传" type="submit" color="primary" :disable="!files"/>
-      </div>
-    </q-form>
     <q-table
       title="Treats"
       :data="data"
@@ -22,16 +7,19 @@
       row-key="name"
       selection="multiple"
       :selected.sync="selected"
-      :pagination.sync="pagination"
-      :loading="loading"
+      :filter="filter"
       grid
       hide-header
     >
-<!--      <template v-slot:top-left>-->
-<!--        <q-checkbox :indeterminate-value="selected.length > 0 && selected.length < data.length" v-model="selectedAll"/>-->
-<!--      </template>-->
+      <template v-slot:top-left>
+        <q-checkbox dense v-model="props.selected" :label="props.row.name" />
+      </template>
       <template v-slot:top-right>
-        <q-btn @click="delImages" :disable="!selected || selected.length === 0">删除</q-btn>
+        <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
       </template>
 
       <template v-slot:item="props">
@@ -41,14 +29,23 @@
         >
           <q-card :class="props.selected ? 'bg-grey-2' : ''">
             <q-card-section>
-              <q-checkbox dense v-model="props.selected">
-                <q-img :src="props.row.Url"></q-img>
-              </q-checkbox>
+              <q-checkbox dense v-model="props.selected" :label="props.row.name" />
             </q-card-section>
-            <q-separator/>
+            <q-separator />
+            <q-list dense>
+              <q-item v-for="col in props.cols.filter(col => col.name !== 'desc')" :key="col.name">
+                <q-item-section>
+                  <q-item-label>{{ col.label }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-item-label caption>{{ col.value }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
           </q-card>
         </div>
       </template>
+
     </q-table>
   </q-page>
 </template>
@@ -57,152 +54,128 @@
 export default {
   data () {
     return {
-      selectedAll: false,
+      filter: '',
       selected: [],
-      files: null,
-      pagination: {
-        sortBy: 'id',
-        descending: true,
-        page: 1,
-        rowsPerPage: 15,
-        rowsNumber: 10
-      },
-      loading: false,
       columns: [
         {
-          name: 'ID',
-          align: 'center',
-          label: 'ID',
-          field: 'ID'
+          name: 'desc',
+          required: true,
+          label: 'Dessert (100g serving)',
+          align: 'left',
+          field: row => row.name,
+          format: val => `${val}`,
+          sortable: true
         },
-        {
-          name: 'File',
-          label: 'File',
-          field: 'File'
-        },
-        {
-          name: 'Url',
-          label: 'Url',
-          field: 'Url'
-        }
+        { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
+        { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
+        { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
+        { name: 'protein', label: 'Protein (g)', field: 'protein' },
+        { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
+        { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+        { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
       ],
-      data: []
-    }
-  },
-  watch: {
-    selectedAll (val) {
-      if (val) {
-        this.selected = this.data
-      } else {
-        this.selected = []
-      }
-    }
-  },
-  created () {
-    this.count()
-  },
-  methods: {
-    count () {
-      this.loading = true
-      this.$axios.get('/big-picture/count').then(data => {
-        data = data.data
-        if (data && data.Data) {
-          this.pagination.rowsNumber = data.Data
-          this.onRequest({ pagination: this.pagination })
+      data: [
+        {
+          name: 'Frozen Yogurt',
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          sodium: 87,
+          calcium: '14%',
+          iron: '1%'
+        },
+        {
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          sodium: 129,
+          calcium: '8%',
+          iron: '1%'
+        },
+        {
+          name: 'Eclair',
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
+          protein: 6.0,
+          sodium: 337,
+          calcium: '6%',
+          iron: '7%'
+        },
+        {
+          name: 'Cupcake',
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
+          protein: 4.3,
+          sodium: 413,
+          calcium: '3%',
+          iron: '8%'
+        },
+        {
+          name: 'Gingerbread',
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
+          protein: 3.9,
+          sodium: 327,
+          calcium: '7%',
+          iron: '16%'
+        },
+        {
+          name: 'Jelly bean',
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
+          protein: 0.0,
+          sodium: 50,
+          calcium: '0%',
+          iron: '0%'
+        },
+        {
+          name: 'Lollipop',
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
+          protein: 0,
+          sodium: 38,
+          calcium: '0%',
+          iron: '2%'
+        },
+        {
+          name: 'Honeycomb',
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
+          protein: 6.5,
+          sodium: 562,
+          calcium: '0%',
+          iron: '45%'
+        },
+        {
+          name: 'Donut',
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
+          protein: 4.9,
+          sodium: 326,
+          calcium: '2%',
+          iron: '22%'
+        },
+        {
+          name: 'KitKat',
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
+          protein: 7,
+          sodium: 54,
+          calcium: '12%',
+          iron: '6%'
         }
-        this.loading = false
-      })
-    },
-    onRequest (props) {
-      const {
-        page,
-        rowsPerPage,
-        sortBy,
-        descending
-      } = props.pagination
-
-      this.loading = true
-      const startRow = (page - 1) * rowsPerPage
-
-      const params = {
-        Limit: rowsPerPage,
-        Offset: startRow
-      }
-
-      if (sortBy) {
-        params.Column = sortBy
-        params.Desc = descending
-      }
-
-      this.$axios.get('/big-pictures', { params: params }).then(data => {
-        data = data.data
-        if (data && data.Data) {
-          // clear out existing data and add new
-          this.data.splice(0, this.data.length, ...data.Data)
-
-          // don't forget to update local pagination object
-          this.pagination.page = page
-          this.pagination.rowsPerPage = rowsPerPage
-          this.pagination.sortBy = sortBy
-          this.pagination.descending = descending
-
-          // ...and turn of loading indicator
-          this.loading = false
-        }
-      })
-    },
-    uploadImage (evt) {
-      const formData = new FormData(evt.target)
-      this.loading = true
-      this.$axios.put('/big-pictures', formData).then(data => {
-        data = data.data
-        if (data && data.Data) {
-          // for (const datum of data.Data) {
-          //   this.data.push(datum)
-          // }
-          // this.loading = false
-          this.count()
-        }
-      })
-    },
-    //   onSubmit (evt) {
-    //     const formData = new FormData(evt.target)
-    //     const submitResult = []
-    //
-    //     for (const [ name, value ] of formData.entries()) {
-    //       if (value.name.length > 0) {
-    //         submitResult.push({
-    //           name,
-    //           value: value.name
-    //         })
-    //       }
-    //     }
-    //
-    //     this.submitResult = submitResult
-    //     this.submitEmpty = submitResult.length === 0
-    //   }
-    // },
-    delImages () {
-      const params = []
-      for (const img of this.selected) {
-        params.push(img.ID)
-      }
-      this.loading = true
-      this.$axios.delete('/big-pictures', { params: { IDs: params } }).then(data => {
-        data = data.data
-        if ((data && data.Data) || data.Data === 0) {
-          this.pagination.rowsNumber = data.Data
-        }
-        for (const param of params) {
-          for (let i = 0; i < this.data.length; i++) {
-            if (this.data[i].ID === param) {
-              this.data.splice(i, 1)
-            }
-          }
-        }
-        this.selected = []
-        this.loading = false
-      })
+      ]
     }
   }
 }
