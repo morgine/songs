@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="dialog" persistent transition-show="scale" transition-hide="scale">
-    <q-card style="width: 100%;">
+    <q-card>
       <q-card-section>
         <q-form @submit="uploadImage">
           <q-file
@@ -17,25 +17,24 @@
           </div>
         </q-form>
       </q-card-section>
-      <q-card-section>
-        <div class="row q-gutter-lg">
-          <div
+      <q-card-section style="max-height: 60vh" class="scroll">
+        <div class="q-pa-md row items-start q-gutter-md">
+          <q-card
             v-for="(image, key) in images"
             :key="image.ID"
-            class="column col-sm-6 col-md-4 col-lg-3 col-xl-3"
           >
-            <q-img class="col" :src="`/v1/picture/${image.File}`">
+            <q-img class="col" :src="`${$axios.defaults.baseURL}/picture/${image.File}`">
               <template v-slot:error>
                 <div class="absolute-full flex flex-center">
                   error!
                 </div>
               </template>
             </q-img>
-            <div class="col">
-              <q-btn icon="delete" @click="delImage(image.ID, key)"></q-btn>
-              <q-btn icon="check" @click="selected = image.File"></q-btn>
-            </div>
-          </div>
+            <q-card-actions align="around">
+              <q-btn flat icon="delete" @click="delImage(image.ID, key)"></q-btn>
+              <q-btn flat icon="check" @click="selected = image.File"></q-btn>
+            </q-card-actions>
+          </q-card>
         </div>
       </q-card-section>
       <q-card-section v-if="pagination.Total">
@@ -77,10 +76,11 @@ export default {
   },
   computed: {
     maxPage () {
-      return Math.ceil(this.pagination.Total / this.pagination.limit)
+      return Math.ceil(this.pagination.Total / this.pagination.Limit)
     }
   },
   created () {
+    console.log(this.$axios.defaults)
     this.count()
   },
   watch: {

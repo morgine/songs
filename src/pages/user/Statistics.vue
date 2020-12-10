@@ -49,6 +49,34 @@
         />
       </template>
     </q-table>
+    <template v-if="statistics && statistics.app_user_statistics">
+      <template v-for="(app, idx) in statistics.app_user_statistics">
+        <q-table
+          :key="idx"
+          :title="app.nickname"
+          :data="app.statistics&&app.statistics.cumulates?app.statistics.cumulates:[]"
+          :columns="dateColumns"
+          row-key="ref_date"
+        >
+<!--          <template v-slot:top-left>-->
+<!--            <span v-if="app.err">{{ app.err }}</span>-->
+<!--          </template>-->
+          <template v-slot:top-right>
+            <span v-if="app.err" class="text-grey text-subtitle1 q-mr-lg">
+          {{ app.err }}
+        </span>
+            <q-btn
+              v-if="app.statistics && app.statistics.cumulates"
+              color="primary"
+              icon-right="archive"
+              label="导出 csv"
+              no-caps
+              @click="exportTable(`${app.Nickname}-${params.BeginDate}-${params.EndDate}`, app.statistics.cumulates, dateColumns)"
+            />
+          </template>
+        </q-table>
+      </template>
+    </template>
   </q-page>
 </template>
 
@@ -102,6 +130,38 @@ export default {
           align: 'right',
           label: '公众号数量',
           field: 'count'
+        },
+        {
+          name: 'cumulate_user',
+          align: 'right',
+          label: '用户总计',
+          field: 'cumulate_user'
+        },
+        {
+          name: 'new_user',
+          align: 'right',
+          label: '新增用户',
+          field: 'new_user'
+        },
+        {
+          name: 'cancel_user',
+          align: 'right',
+          label: '取关用户',
+          field: 'cancel_user'
+        },
+        {
+          name: 'positive_user',
+          align: 'right',
+          label: '净增用户',
+          field: row => row.new_user - row.cancel_user
+        }
+      ],
+      dateColumns: [
+        {
+          name: 'ref_date',
+          align: 'right',
+          label: '日期',
+          field: 'ref_date'
         },
         {
           name: 'cumulate_user',
