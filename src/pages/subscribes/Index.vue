@@ -7,19 +7,10 @@
       <q-card-section>
         <q-card flat v-for="(article, idx) in articles" :key="idx">
           <q-card-section>
-            <q-input label="标题" v-model="article.Title"/>
-          </q-card-section>
-          <q-card-section>
-            <q-input label="描述" v-model="article.Description"/>
-          </q-card-section>
-          <q-card-section>
-            <q-input label="地址" v-model="article.Url"/>
-          </q-card-section>
-          <q-card-section>
-            <a href="javascript: void(0)" @click="$refs[`article-image-selector-${idx}`].openDialog()">
+            <a href="javascript: void(0)" @click="openDialog(`article-image-selector-${idx}`)">
               <q-img
-                :src="article.PicFile?`${$axios.defaults.baseURL}/picture/${article.PicFile}`:''"
-                :width="idx===0?'300px':'100px'"
+                :src="`${$axios.defaults.baseURL}/picture/${article.PicFile}`"
+                :width="idx===0?'300px':'120px'"
                 height="120px"
                 class="q-hoverable"
               >
@@ -28,22 +19,31 @@
                     选择封面
                   </div>
                 </template>
-                <div class="absolute-full text-subtitle1 flex flex-center">
-                  选择封面
-                </div>
+<!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
+<!--                  选择封面-->
+<!--                </div>-->
               </q-img>
             </a>
             <ImageSelector v-model="article.PicFile" :ref="`article-image-selector-${idx}`"></ImageSelector>
           </q-card-section>
+          <q-card-section>
+            <q-input label="标题" v-model="article.Title"/>
+          </q-card-section>
+          <q-card-section>
+            <q-input label="描述" v-model="article.Description"/>
+          </q-card-section>
+          <q-card-section>
+            <q-input label="地址" v-model="article.Url"/>
+          </q-card-section>
           <q-card-actions align="around">
-            <q-btn icon="delete" @click="articles.splice(idx, 1)"/>
-            <q-btn icon="plus" color="primary" class="q-ml-md" @click="articles.splice(idx, 0, initArticle())"/>
+            <q-btn icon="remove" flat @click="articles.splice(idx, 1)"/>
           </q-card-actions>
         </q-card>
       </q-card-section>
       <q-card-actions align="around">
-        <q-btn icon="delete" @click="delArticles" color="warning"/>
-        <q-btn icon="check" @click="saveArticles" color="primary"/>
+        <q-btn v-if="articles.length < 8" icon="add" color="primary" flat @click="articles.push(initArticle())"/>
+        <q-btn icon="delete" flat @click="delArticles" color="warning"/>
+        <q-btn icon="check" flat @click="saveArticles" color="primary"/>
       </q-card-actions>
     </q-card>
     <q-card flat>
@@ -53,15 +53,9 @@
       <q-card-section>
         <q-card flat v-for="(card, idx) in cards" :key="idx">
           <q-card-section>
-            <q-input label="小程序标题" v-model="card.Title"/>
-          </q-card-section>
-          <q-card-section>
-            <q-input label="小程序地址" v-model="card.PagePath"/>
-          </q-card-section>
-          <q-card-section>
-            <a href="javascript: void(0)" @click="$refs[`image-selector-${idx}`].openDialog()">
+            <a href="javascript: void(0)" @click="openDialog(`card-image-selector-${idx}`)">
               <q-img
-                :src="card.ThumbMediaFilename?`${$axios.defaults.baseURL}/picture/${card.ThumbMediaFilename}`:''"
+                :src="`${$axios.defaults.baseURL}/picture/${card.ThumbMediaFilename}`"
                 width="100px"
                 height="120px"
                 class="q-hoverable"
@@ -71,22 +65,28 @@
                     选择封面
                   </div>
                 </template>
-                <div class="absolute-full text-subtitle1 flex flex-center">
-                  选择封面
-                </div>
+<!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
+<!--                  选择封面-->
+<!--                </div>-->
               </q-img>
             </a>
-            <ImageSelector v-model="card.ThumbMediaFilename" :ref="`image-selector-${idx}`"></ImageSelector>
+            <ImageSelector v-model="card.ThumbMediaFilename" :ref="`card-image-selector-${idx}`"></ImageSelector>
+          </q-card-section>
+          <q-card-section>
+            <q-input label="小程序标题" v-model="card.Title"/>
+          </q-card-section>
+          <q-card-section>
+            <q-input label="小程序地址" v-model="card.PagePath"/>
           </q-card-section>
           <q-card-actions align="around">
-            <q-btn icon="delete" @click="cards.splice(idx, 1)"/>
-            <q-btn icon="plus" color="primary" class="q-ml-md" @click="cards.splice(idx, 0, initCard())"/>
+            <q-btn icon="remove" flat @click="cards.splice(idx, 1)"/>
           </q-card-actions>
         </q-card>
       </q-card-section>
       <q-card-actions align="around">
-        <q-btn icon="delete" @click="delCard" color="warning"/>
-        <q-btn icon="check" @click="saveCard" color="primary"/>
+        <q-btn icon="add" v-if="articles.length < 8" flat color="primary" @click="cards.push(initCard())"/>
+        <q-btn icon="delete" flat @click="delCard" color="warning"/>
+        <q-btn icon="check" flat @click="saveCard" color="primary"/>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -124,6 +124,9 @@ export default {
     this.getArticles()
   },
   methods: {
+    openDialog (ref) {
+      this.$refs[ref][0].openDialog()
+    },
     getCard () {
       this.$axios.get('/mini-program-card').then(data => {
         data = data.data
