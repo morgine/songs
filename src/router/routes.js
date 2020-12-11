@@ -1,9 +1,18 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/IndexLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
+      { path: '/login', component: () => import('pages/Login.vue') },
+      { path: '/register', component: () => import('pages/Register.vue') }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '/main', component: () => import('pages/Main.vue') },
       { path: '/settings', component: () => import('pages/admin/Settings.vue') },
       { path: '/dashboard', component: () => import('pages/Dashboard.vue') },
       { path: '/apps', component: () => import('pages/apps/Index.vue') },
@@ -14,11 +23,6 @@ const routes = [
       { path: '/pictures', component: () => import('pages/images/Images.vue') },
       { path: '/subscribes', component: () => import('pages/subscribes/Index.vue') }
     ]
-  },
-
-  {
-    path: '/login',
-    component: () => import('pages/Login.vue')
   },
   // Always leave this as last one,
   // but you can also remove it

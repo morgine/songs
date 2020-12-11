@@ -126,9 +126,9 @@ module.exports = function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'PECHE ADMIN',
-        short_name: 'PECHE ADMIN',
-        description: 'PECHE advertisement manage',
+        name: '小樱桃生鲜供应链PASS平台',
+        short_name: 'PECHE',
+        description: '小樱桃生鲜供应链PASS平台',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
