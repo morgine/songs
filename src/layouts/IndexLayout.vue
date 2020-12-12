@@ -1,6 +1,5 @@
 <template>
   <q-layout view="hHh lpR fff">
-
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
@@ -31,10 +30,12 @@
       <div class="row q-gutter-lg">
         <div class="col-4">
           <div class="text-h6">联系我们</div>
+          <div class="text-subtitle2">联系人：文先生</div>
           <div class="text-subtitle2">电话：18883333258</div>
         </div>
+        <hr/>
         <div class="col-6">
-          <div class="text-h5">重庆沃江科技有限公司</div>
+          <div class="text-h6">重庆沃江科技有限公司</div>
           <div class="text-subtitle2">© {{ host }}</div>
         </div>
       </div>

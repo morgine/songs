@@ -1,15 +1,15 @@
 <template>
   <q-page
-    class="window-height window-width row justify-center items-center"
-    style="background: linear-gradient(#9e92d7, #685c99);"
+    class="window-height window-width row justify-center items-center login-page"
+    style="background: linear-gradient(#9e92d7, #685c99); background-image: url('images/login-background.jpg')"
   >
     <div class="column q-pa-lg">
       <div class="row">
-        <q-card square class="shadow-24" style="width:400px;height:400px;">
-          <q-card-section class="bg-deep-purple-7">
+        <q-card class="shadow-24" style="width:400px;height:400px;">
+          <q-card-section class="bg-deep-purple-8">
             <h4 class="text-h5 text-white q-my-md">登陆管理后台</h4>
             <div class="absolute-bottom-right q-pr-md" style="transform: translateY(50%);">
-              <!--                  <q-btn fab icon="add" color="purple-4" />-->
+                                <q-btn fab icon="add" color="purple-4" />
             </div>
           </q-card-section>
           <q-card-section>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Login',
   data () {
@@ -74,6 +75,3 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>
