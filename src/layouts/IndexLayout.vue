@@ -33,7 +33,6 @@
           <div class="text-subtitle2">联系人：文先生</div>
           <div class="text-subtitle2">电话：18883333258</div>
         </div>
-        <hr/>
         <div class="col-6">
           <div class="text-h6">重庆沃江科技有限公司</div>
           <div class="text-subtitle2">© {{ host }}</div>

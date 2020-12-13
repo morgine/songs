@@ -165,7 +165,7 @@
             <q-icon name="send"/>
           </q-item-section>
 
-          <q-item-section>用户统计</q-item-section>
+          <q-item-section>数据统计</q-item-section>
         </q-item>
         <q-item
           clickable
