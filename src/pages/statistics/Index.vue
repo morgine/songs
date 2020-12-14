@@ -205,7 +205,9 @@ export default {
         {
           name: 'errs',
           label: '错误列表',
-          format: (val, row) => `${val.join('\n')}`,
+          format: (val, row) => {
+            return val ? `${val.join('\n')}` : 'none'
+          },
           field: 'errs'
         }
       ].concat(columns),
