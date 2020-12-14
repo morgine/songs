@@ -36,7 +36,7 @@
       <q-table
         :key="`total-${didx}`"
         :title="`总量-${date.date}`"
-        :data="date.data"
+        :data="[date.data]"
         :columns="columns"
         row-key="cumulate_user"
       >
@@ -46,29 +46,27 @@
             icon-right="archive"
             label="导出 csv"
             no-caps
-            @click="exportTable(`总量-${date.date}`, date.data, columns)"
+            @click="exportTable(`总量-${date.date}`, [date.data], columns)"
           />
         </template>
       </q-table>
-      <template v-for="(app, aidx) in date.apps">
-        <q-table
-          :key="`app-${didx}-${aidx}`"
-          :title="`详细-${date.date}`"
-          :data="app"
-          :columns="appColumns"
-          row-key="appid"
-        >
-          <template v-slot:top-right>
-            <q-btn
-              color="primary"
-              icon-right="archive"
-              label="导出 csv"
-              no-caps
-              @click="exportTable(`详细-${date.date}`, app, appColumns)"
-            />
-          </template>
-        </q-table>
-      </template>
+      <q-table
+        :key="`app-${didx}`"
+        :title="`详细-${date.date}`"
+        :data="date.apps"
+        :columns="appColumns"
+        row-key="appid"
+      >
+        <template v-slot:top-right>
+          <q-btn
+            color="primary"
+            icon-right="archive"
+            label="导出 csv"
+            no-caps
+            @click="exportTable(`详细-${date.date}`, date.apps, appColumns)"
+          />
+        </template>
+      </q-table>
     </template>
   </q-page>
 </template>
@@ -81,7 +79,7 @@ const oneDate = 1000 * 60 * 60 * 24
 const nowDate = date.formatDate(timeStamp - oneDate, 'YYYY/MM/DD')
 const prevDate = date.formatDate(timeStamp - (2 * oneDate), 'YYYY/MM/DD')
 
-function wrapCsvValue (val, formatFn) {
+function wrapCsvValue (val, row, formatFn) {
   // eslint-disable-next-line no-void
   let formatted = formatFn !== void 0
     ? formatFn(val)
@@ -114,7 +112,7 @@ export default {
       },
       {
         name: 'new_user',
-        label: '新增的用户',
+        label: '新增用户',
         field: 'new_user'
       },
       {
@@ -130,6 +128,7 @@ export default {
       {
         name: 'cancel_rate',
         label: '取关率',
+        format: (val) => `${val.toFixed(3)}%`,
         field: 'cancel_rate'
       },
       {
@@ -145,6 +144,7 @@ export default {
       {
         name: 'exposure_rate',
         label: '曝光率',
+        format: (val) => `${val.toFixed(3)}%`,
         field: 'exposure_rate'
       },
       {
@@ -155,6 +155,7 @@ export default {
       {
         name: 'click_rate',
         label: '点击率',
+        format: (val) => `${val.toFixed(3)}%`,
         field: 'click_rate'
       },
       {
@@ -170,7 +171,10 @@ export default {
       {
         name: 'income_outcome_rate',
         label: '收入支出比率',
-        field: 'income_outcome_rate'
+        format: (val) => `${val.toFixed(3)}%`,
+        field: (row) => {
+          return row.outcome ? row.income / row.outcome : 0
+        }
       },
       {
         name: 'ecpm',
@@ -201,10 +205,10 @@ export default {
         {
           name: 'errs',
           label: '错误列表',
+          format: (val, row) => `${val.join('\n')}`,
           field: 'errs'
-        },
-        ...columns
-      ],
+        }
+      ].concat(columns),
       dates: [
         // {
         //   date: '',
@@ -263,6 +267,7 @@ export default {
       })
     },
     exportTable (filename, data, columns) {
+      console.log(data)
       // naive encoding to csv format
       const content = [columns.map(col => wrapCsvValue(col.label))].concat(
         data.map(row => columns.map(col => wrapCsvValue(
