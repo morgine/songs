@@ -10,7 +10,7 @@
             <a href="javascript: void(0)" @click="openDialog(`article-image-selector-${idx}`)">
               <q-img
                 :src="`${$axios.defaults.baseURL}/picture/${article.PicFile}`"
-                :width="idx===0?'300px':'120px'"
+                :width="idx===0 && articles.length > 1?'300px':'120px'"
                 height="120px"
                 class="q-hoverable"
               >
@@ -19,9 +19,9 @@
                     选择封面
                   </div>
                 </template>
-<!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
-<!--                  选择封面-->
-<!--                </div>-->
+                <!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
+                <!--                  选择封面-->
+                <!--                </div>-->
               </q-img>
             </a>
             <ImageSelector v-model="article.PicFile" :ref="`article-image-selector-${idx}`"></ImageSelector>
@@ -65,15 +65,22 @@
                     选择封面
                   </div>
                 </template>
-<!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
-<!--                  选择封面-->
-<!--                </div>-->
+                <!--                <div class="absolute-full text-subtitle1 flex flex-center">-->
+                <!--                  选择封面-->
+                <!--                </div>-->
               </q-img>
             </a>
             <ImageSelector v-model="card.ThumbMediaFilename" :ref="`card-image-selector-${idx}`"></ImageSelector>
           </q-card-section>
           <q-card-section>
             <q-input label="小程序标题" v-model="card.Title"/>
+          </q-card-section>
+          <q-card-section>
+            <q-input label="小程序 appid" v-model="card.Appid">
+              <template v-slot:hint>
+                小程序需要与公众号关联
+              </template>
+            </q-input>
           </q-card-section>
           <q-card-section>
             <q-input label="小程序地址" v-model="card.PagePath"/>
@@ -104,6 +111,7 @@ export default {
       initCard () {
         return {
           Title: '',
+          Appid: '',
           PagePath: '',
           ThumbMediaFilename: ''
         }
