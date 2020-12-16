@@ -76,11 +76,7 @@
             <q-input label="小程序标题" v-model="card.Title"/>
           </q-card-section>
           <q-card-section>
-            <q-input label="小程序 appid" v-model="card.Appid">
-              <template v-slot:hint>
-                小程序需要与公众号关联
-              </template>
-            </q-input>
+            <q-input label="小程序 appid" v-model="card.Appid" hint="小程序需要与公众号关联"/>
           </q-card-section>
           <q-card-section>
             <q-input label="小程序地址" v-model="card.PagePath"/>
