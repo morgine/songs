@@ -17,36 +17,15 @@
         <q-btn flat @click="resetApp">拉取公众号</q-btn>
         <q-btn flat @click="addApp">添加公众号</q-btn>
       </template>
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="ID" :props="props">
-            {{ props.row.ID }}
-          </q-td>
-          <q-td key="Appid" :props="props">
-            {{ props.row.Appid }}
-          </q-td>
-          <q-td key="NickName" :props="props">
-            {{ props.row.NickName }}
-          </q-td>
-          <q-td key="HeadImg" :props="props">
-            <q-img alt="头像" :src="props.row.HeadImg" width="40px" height="40px"></q-img>
-          </q-td>
-          <q-td key="UserName" :props="props">
-            {{ props.row.UserName }}
-          </q-td>
-          <q-td key="PrincipalName" :props="props">
-            {{ props.row.PrincipalName }}
-          </q-td>
-          <q-td key="Alias" :props="props">
-            {{ props.row.Alias }}
-          </q-td>
-          <q-td key="QrcodeUrl" :props="props">
-            <q-img alt="二维码" :src="props.row.QrcodeUrl" width="60px" height="60px"></q-img>
-          </q-td>
-          <q-td key="Signature" :props="props">
-            {{ props.row.Signature }}
-          </q-td>
-        </q-tr>
+      <template v-slot:body-cell-HeadImg="props">
+        <q-td :props="props">
+          <q-img :src="props.value" height="40px" width="40px"/>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-QrcodeUrl="props">
+        <q-td :props="props">
+          <a :href="`${$axios.defaults.baseURL}/proxy?img=${props.value}`" target="_blank">二维码</a>
+        </q-td>
       </template>
     </q-table>
   </q-page>
