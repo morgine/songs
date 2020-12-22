@@ -167,13 +167,13 @@ export default {
         sortable: true
       },
       {
-        name: 'outcome',
+        name: 'outcome(元)',
         label: '支出',
         field: row => `${(row.outcome / 100).toFixed(2)}`,
         sortable: true
       },
       {
-        name: 'income',
+        name: 'income(元)',
         label: '收入',
         field: row => `${(row.income / 100).toFixed(2)}`,
         sortable: true
@@ -186,8 +186,8 @@ export default {
       },
       {
         name: 'ecpm',
-        label: '广告千次曝光收益',
-        field: row => `${(row.ecpm / 100).toFixed(2)}%`,
+        label: '千次曝光收益(元)',
+        field: row => `${(row.ecpm / 100).toFixed(2)}`,
         sortable: true
       }
     ]
