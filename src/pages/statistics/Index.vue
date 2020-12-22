@@ -55,6 +55,7 @@
         :title="`详细-${date.date}`"
         :data="date.apps"
         :columns="appColumns"
+        :sort-method="sortColumns"
         row-key="appid"
       >
         <template v-slot:top-right>
@@ -108,78 +109,86 @@ export default {
       {
         name: 'cumulate_user',
         label: '用户总量',
-        field: 'cumulate_user'
+        field: 'cumulate_user',
+        sortable: true
       },
       {
         name: 'new_user',
         label: '新增用户',
-        field: 'new_user'
+        field: 'new_user',
+        sortable: true
       },
       {
         name: 'cancel_user',
         label: '取消用户',
-        field: 'cancel_user'
+        field: 'cancel_user',
+        sortable: true
       },
       {
         name: 'positive_user',
         label: '净增用户',
-        field: 'positive_user'
+        field: 'positive_user',
+        sortable: true
       },
       {
         name: 'cancel_rate',
         label: '取关率',
-        format: (val) => `${val.toFixed(3)}%`,
-        field: 'cancel_rate'
+        field: row => `${(100 * row.cancel_rate).toFixed(2)}%`,
+        sortable: true
       },
       {
         name: 'req_succ_count',
         label: '拉取量',
-        field: 'req_succ_count'
+        field: 'req_succ_count',
+        sortable: true
       },
       {
         name: 'exposure_count',
         label: '曝光量',
-        field: 'exposure_count'
+        field: 'exposure_count',
+        sortable: true
       },
       {
         name: 'exposure_rate',
         label: '曝光率',
-        format: (val) => `${val.toFixed(3)}%`,
-        field: 'exposure_rate'
+        field: row => `${(100 * row.exposure_rate).toFixed(2)}%`,
+        sortable: true
       },
       {
         name: 'click_count',
         label: '点击量',
-        field: 'click_count'
+        field: 'click_count',
+        sortable: true
       },
       {
         name: 'click_rate',
         label: '点击率',
-        format: (val) => `${val.toFixed(3)}%`,
-        field: 'click_rate'
+        field: row => `${(100 * row.click_rate).toFixed(2)}%`,
+        sortable: true
       },
       {
         name: 'outcome',
         label: '支出',
-        field: 'outcome'
+        field: row => `${(row.outcome / 100).toFixed(2)}`,
+        sortable: true
       },
       {
         name: 'income',
         label: '收入',
-        field: 'income'
+        field: row => `${(row.income / 100).toFixed(2)}`,
+        sortable: true
       },
       {
         name: 'income_outcome_rate',
         label: '收入支出比率',
-        format: (val) => `${val.toFixed(3)}%`,
-        field: (row) => {
-          return row.outcome ? row.income / row.outcome : 0
-        }
+        field: row => row.outcome ? `${(row.income / row.outcome).toFixed(2)}%` : '0.00%',
+        sortable: true
       },
       {
         name: 'ecpm',
         label: '广告千次曝光收益',
-        field: 'ecpm'
+        field: row => `${(row.ecpm / 100).toFixed(2)}%`,
+        sortable: true
       }
     ]
     return {
@@ -201,16 +210,13 @@ export default {
           name: 'nickname',
           label: '公众号名称',
           field: 'nickname'
-        },
+        }
+      ].concat(columns,
         {
           name: 'errs',
           label: '错误列表',
-          format: (val, row) => {
-            return val ? `${val.join('\n')}` : 'none'
-          },
-          field: 'errs'
-        }
-      ].concat(columns),
+          field: row => row.errs ? `${row.errs.join('\n')}` : ''
+        }),
       dates: [
         // {
         //   date: '',
@@ -269,7 +275,6 @@ export default {
       })
     },
     exportTable (filename, data, columns) {
-      console.log(data)
       // naive encoding to csv format
       const content = [columns.map(col => wrapCsvValue(col.label))].concat(
         data.map(row => columns.map(col => wrapCsvValue(
@@ -294,6 +299,16 @@ export default {
           icon: 'warning'
         })
       }
+    },
+    sortColumns (rows, sortBy, descending) {
+      rows.sort((a, b) => {
+        if (descending) {
+          return a[sortBy] - b[sortBy]
+        } else {
+          return b[sortBy] - a[sortBy]
+        }
+      })
+      return rows
     }
   }
 }
