@@ -216,7 +216,8 @@ export default {
           name: 'errs',
           label: '错误列表',
           field: row => row.errs ? `${row.errs.join('\n')}` : ''
-        }),
+        }
+      ),
       dates: [
         // {
         //   date: '',

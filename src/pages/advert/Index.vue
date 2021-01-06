@@ -71,7 +71,7 @@
           :selected.sync="selectedFields"
         />
         <div>
-          <q-btn label="获取统计" type="submit" color="primary" @click="getDailyReports"/>
+          <q-btn label="获取统计" color="primary" @click="getDailyReports"/>
         </div>
       </q-form>
       <q-table
@@ -130,7 +130,7 @@ export default {
       unauthorized: true,
       refresh: false,
       dailyReportsParams: {
-        account_id: 0,
+        account_id: '',
         level: '',
         date_range: {
           start_date: '',
@@ -154,8 +154,8 @@ export default {
             sort_type: ''
           }
         ],
-        page: 1,
-        page_size: 20,
+        // page: '1',
+        // page_size: '20',
         time_line: 'REPORTING_TIME',
         fields: []
       },
@@ -319,8 +319,8 @@ export default {
       this.selectedColumns = columns
     },
     dailyReportsPagination (val) {
-      this.dailyReportsParams.page = val.page
-      this.dailyReportsParams.page_size = val.rowsPerPage
+      // this.dailyReportsParams.page = val.page
+      // this.dailyReportsParams.page_size = val.rowsPerPage
     }
   },
   methods: {
@@ -356,8 +356,8 @@ export default {
         if (data && data.Data) {
           this.dailyReports = data.Data
           this.dailyReportsPagination.rowsNumber = this.dailyReports.page_info.total_number
-          this.dailyReportsPagination.page = this.dailyReports.page_info.page
-          this.dailyReportsPagination.rowsPerPage = this.dailyReports.page_info.page_size
+          // this.dailyReportsPagination.page = this.dailyReports.page_info.page
+          // this.dailyReportsPagination.rowsPerPage = this.dailyReports.page_info.page_size
         }
       })
     },

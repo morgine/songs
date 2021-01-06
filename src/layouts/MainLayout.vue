@@ -167,33 +167,33 @@
 
           <q-item-section>数据统计</q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          :active="link === 'advert'"
-          @click="link = 'advert'"
-          active-class="my-menu-link"
-          to="/advert"
-        >
-          <q-item-section avatar>
-            <q-icon name="send"/>
-          </q-item-section>
+<!--        <q-item-->
+<!--          clickable-->
+<!--          v-ripple-->
+<!--          :active="link === 'advert'"-->
+<!--          @click="link = 'advert'"-->
+<!--          active-class="my-menu-link"-->
+<!--          to="/advert"-->
+<!--        >-->
+<!--          <q-item-section avatar>-->
+<!--            <q-icon name="send"/>-->
+<!--          </q-item-section>-->
 
-          <q-item-section>广告统计</q-item-section>
-        </q-item>
-        <q-item
-          clickable
-          v-ripple
-          :active="link === 'pictures'"
-          @click="link = 'pictures'"
-          active-class="my-menu-link"
-          to="/pictures"
-        >
-          <q-item-section avatar>
-            <q-icon name="send"/>
-          </q-item-section>
-          <q-item-section>图片管理</q-item-section>
-        </q-item>
+<!--          <q-item-section>广告统计</q-item-section>-->
+<!--        </q-item>-->
+<!--        <q-item-->
+<!--          clickable-->
+<!--          v-ripple-->
+<!--          :active="link === 'pictures'"-->
+<!--          @click="link = 'pictures'"-->
+<!--          active-class="my-menu-link"-->
+<!--          to="/pictures"-->
+<!--        >-->
+<!--          <q-item-section avatar>-->
+<!--            <q-icon name="send"/>-->
+<!--          </q-item-section>-->
+<!--          <q-item-section>图片管理</q-item-section>-->
+<!--        </q-item>-->
         <q-item
           clickable
           v-ripple
@@ -207,7 +207,19 @@
           </q-item-section>
           <q-item-section>关注回复</q-item-section>
         </q-item>
-
+        <q-item
+          clickable
+          v-ripple
+          :active="link === 'menus'"
+          @click="link = 'menus'"
+          active-class="my-menu-link"
+          to="/menus"
+        >
+          <q-item-section avatar>
+            <q-icon name="send"/>
+          </q-item-section>
+          <q-item-section>菜单管理</q-item-section>
+        </q-item>
         <!--        <q-item-->
         <!--          clickable-->
         <!--          v-ripple-->
