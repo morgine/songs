@@ -18,8 +18,8 @@
         multiple
       ></q-select>
       <q-btn color="primary" label="生成公众号菜单"
-             :disable="!(activeMenu && activeMenu.buttons.length > 0 && selectedApps.length > 0)" @click="genAppMenu"/>
-      <q-btn color="primary" label="删除公众号菜单" :disable="!(selectedApps.length > 0)" @click="delAppMenu"/>
+             :disable="!(activeMenu && activeMenu.buttons.length > 0 && selectedApps && selectedApps.length > 0)" @click="genAppMenu"/>
+      <q-btn color="primary" label="删除公众号菜单" :disable="!(selectedApps && selectedApps.length > 0)" @click="delAppMenu"/>
     </div>
     <q-card v-if="activeMenu" class="q-mt-lg">
       <q-card-section>
