@@ -64,6 +64,14 @@ const routes = [
       {
         path: '/subscribes',
         component: () => import('pages/subscribes/Index.vue')
+      },
+      {
+        path: '/app-groups',
+        component: () => import('pages/app-group/Index.vue')
+      },
+      {
+        path: '/subscribe-msgs',
+        component: () => import('pages/subscribe-msgs/Index.vue')
       }
     ]
   },

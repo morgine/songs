@@ -41,7 +41,7 @@
         </q-card>
       </q-card-section>
       <q-card-actions align="around">
-        <q-btn v-if="articles.length < 8" icon="add" color="primary" flat @click="articles.push(initArticle())"/>
+        <q-btn v-if="cards.length < 8" icon="add" color="primary" flat @click="articles.push(initArticle())"/>
         <q-btn icon="delete" flat @click="delArticles" color="warning"/>
         <q-btn icon="check" flat @click="saveArticles" color="primary"/>
       </q-card-actions>

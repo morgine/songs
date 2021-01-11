@@ -67,6 +67,77 @@
             @click="exportTable(`详细-${date.date}`, date.apps, appColumns)"
           />
         </template>
+        <template v-slot:body-cell-total_outcome="props">
+          <q-td>
+            {{ formatMoney(props.row.total_outcome) }}
+            <q-popup-edit :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100" title="设置总支出" buttons
+                          @save="saveTotalOutcome($event, props.row.appid)">
+              <q-input :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100" dense autofocus/>
+            </q-popup-edit>
+          </q-td>
+        </template>
+        <!--        <template v-slot:body="props">-->
+        <!--          <q-tr :props="props">-->
+        <!--            <q-td key="appid" :props="props">-->
+        <!--              {{ props.row.appid }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="nickname" :props="props">-->
+        <!--              {{ props.row.nickname }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="total_outcome" :props="props">-->
+        <!--              {{ formatMoney(props.row.total_outcome) }}-->
+        <!--              <q-popup-edit v-model="props.row.total_outcome" title="设置总支出" buttons-->
+        <!--                            @save="saveTotalOutcome($event, props.row.appid)">-->
+        <!--                <q-input type="number" v-model.number="props.row.total_outcome" dense autofocus/>-->
+        <!--              </q-popup-edit>-->
+        <!--            </q-td>-->
+        <!--            <q-td key="total_income" :props="props">-->
+        <!--              {{ formatMoney(props.row.total_income) }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="total_income_outcome_rate" :props="props">-->
+        <!--              {{ props.row.total_income_outcome_rate }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="outcome" :props="props">-->
+        <!--              {{ props.row.outcome }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="income" :props="props">-->
+        <!--              {{ props.row.income }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="income_outcome_rate" :props="props">-->
+        <!--              {{ props.row.income_outcome_rate }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="cumulate_user" :props="props">-->
+        <!--              {{ props.row.cumulate_user }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="new_user" :props="props">-->
+        <!--              {{ props.row.new_user }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="cancel_user" :props="props">-->
+        <!--              {{ props.row.cancel_user }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="positive_user" :props="props">-->
+        <!--              {{ props.row.positive_user }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="cancel_rate" :props="props">-->
+        <!--              {{ props.row.cancel_rate }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="req_succ_count" :props="props">-->
+        <!--              {{ props.row.req_succ_count }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="exposure_count" :props="props">-->
+        <!--              {{ props.row.exposure_count }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="click_count" :props="props">-->
+        <!--              {{ props.row.click_count }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="click_rate" :props="props">-->
+        <!--              {{ props.row.click_rate }}-->
+        <!--            </q-td>-->
+        <!--            <q-td key="ecpm" :props="props">-->
+        <!--              {{ props.row.ecpm }}-->
+        <!--            </q-td>-->
+        <!--          </q-tr>-->
+        <!--        </template>-->
       </q-table>
     </template>
   </q-page>
@@ -106,6 +177,40 @@ export default {
   name: 'Index',
   data () {
     const columns = [
+      {
+        name: 'total_outcome',
+        label: '总支出(元)',
+        field: row => `${(row.total_outcome / 100).toFixed(2)}`
+      },
+      {
+        name: 'total_income',
+        label: '总收入(元)',
+        field: row => `${(row.total_income / 100).toFixed(2)}`
+      },
+      {
+        name: 'total_income_outcome_rate',
+        label: '总收支比率',
+        field: row => row.total_outcome ? `${(100 * row.total_income / row.total_outcome).toFixed(2)}%` : '0.00%',
+        sortable: true
+      },
+      {
+        name: 'outcome',
+        label: '当日支出(元)',
+        field: row => `${(row.outcome / 100).toFixed(2)}`,
+        sortable: true
+      },
+      {
+        name: 'income',
+        label: '当日收入(元)',
+        field: row => `${(row.income / 100).toFixed(2)}`,
+        sortable: true
+      },
+      {
+        name: 'income_outcome_rate',
+        label: '当日收支比率',
+        field: row => row.outcome ? `${(row.income / row.outcome).toFixed(2)}%` : '0.00%',
+        sortable: true
+      },
       {
         name: 'cumulate_user',
         label: '用户总量',
@@ -167,24 +272,6 @@ export default {
         sortable: true
       },
       {
-        name: 'outcome(元)',
-        label: '支出',
-        field: row => `${(row.outcome / 100).toFixed(2)}`,
-        sortable: true
-      },
-      {
-        name: 'income(元)',
-        label: '收入',
-        field: row => `${(row.income / 100).toFixed(2)}`,
-        sortable: true
-      },
-      {
-        name: 'income_outcome_rate',
-        label: '收入支出比率',
-        field: row => row.outcome ? `${(row.income / row.outcome).toFixed(2)}%` : '0.00%',
-        sortable: true
-      },
-      {
         name: 'ecpm',
         label: '千次曝光收益(元)',
         field: row => `${(row.ecpm / 100).toFixed(2)}`,
@@ -234,6 +321,8 @@ export default {
         //     click_rate: 0,
         //     outcome: 0,
         //     income: 0,
+        //     total_income: 0,
+        //     total_outcome: 0,
         //     income_outcome_rate: 0,
         //     ecpm: 0
         //   },
@@ -254,6 +343,8 @@ export default {
         //       exposure_rate: 0,
         //       click_count: 0,
         //       click_rate: 0,
+        //       total_income: 0,
+        //       total_outcome: 0,
         //       outcome: 0,
         //       income: 0,
         //       income_outcome_rate: 0,
@@ -265,6 +356,9 @@ export default {
     }
   },
   methods: {
+    formatMoney (money) {
+      return money / 100
+    },
     getStatistics () {
       this.loading = true
       this.$axios.get('/user-statistics', { params: this.params }).then(data => {
@@ -310,6 +404,17 @@ export default {
         }
       })
       return rows
+    },
+    saveTotalOutcome (value, appid) {
+      this.$axios.post('/app-payout', {
+        Appid: appid,
+        Payout: value * 100
+      }).then(data => {
+        data = data.data
+        if (data && data.Message) {
+          this.$q.notify(data.Message)
+        }
+      })
     }
   }
 }
