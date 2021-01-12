@@ -2,7 +2,19 @@
   <q-page padding>
     <div class="row items-center q-gutter-lg">
       <q-select v-model="selectedGroup" :options="groups" option-label="Name" option-value="ID" label="选择分组"
-                style="min-width: 120px"></q-select>
+                style="min-width: 120px">
+        <template v-slot:option="scope">
+          <q-item
+            v-bind="scope.itemProps"
+            v-on="scope.itemEvents"
+          >
+            <q-item-section>
+              <q-item-label v-if="scope.opt.ID === 1">默认分组</q-item-label>
+              <q-item-label v-else>{{ scope.opt.Name }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
       <q-btn color="primary" label="添加分组" @click="appendGroup"/>
       <q-select
         v-model="selectedApps"
@@ -17,25 +29,31 @@
         @filter="filterFn"
         multiple
       ></q-select>
-      <q-btn color="primary" label="应用关注回复"
+      <q-btn color="primary" label="生成数据"
              :loading="applying"
-             :disable="!(((articles && articles.length > 0) || (cards && cards.length > 0)) && (selectedApps && selectedApps.length > 0))"
+             :disable="(selectedGroup && selectedGroup.ID === 1) || (!selectedApps || selectedApps.length === 0)"
              @click="apply"/>
-      <q-btn color="primary" label="移除关注回复" :disable="!(selectedApps && selectedApps.length > 0)" @click="reset"/>
+      <!--      <q-btn color="primary" label="移除关注回复" :disable="!(selectedApps && selectedApps.length > 0)" @click="reset"/>-->
     </div>
     <q-card v-if="selectedGroup" class="q-mt-lg">
       <q-card-section>
+        <div  v-if="selectedGroup.ID === 1">
+          <div class="text-h6">默认分组</div>
+          <div class="text-caption">未生成数据的公众号将使用默认数据</div>
+        </div>
         <div class="row justify-between items-center">
           <div class="text-h6 cursor-pointer">
             {{ selectedGroup.Name }}
             <q-icon name="edit"/>
             <q-popup-edit v-model="selectedGroup.Name" title="编辑分组名称" buttons
-                          @save="saveGroup($event, selectedGroup.ID)">
+                          @save="saveGroup({Name: $event, ID: selectedGroup.ID})">
               <q-input v-model="selectedGroup.Name" dense autofocus/>
             </q-popup-edit>
           </div>
-          <q-btn v-if="groups.length > 1" flat dense color="primary" label="删除分组"
-                 @click="confirmDeleteGroup(selectedGroup.ID)"/>
+          <div>
+            <q-btn v-if="groups.length > 1" flat dense color="primary" label="删除分组"
+                   @click="confirmDeleteGroup(selectedGroup.ID)"/>
+          </div>
         </div>
       </q-card-section>
       <q-card-section>
@@ -78,7 +96,8 @@
             </q-card>
           </q-card-section>
           <q-card-actions align="center">
-            <q-btn v-if="articles.length < 8" icon="add" color="primary" flat @click="createArticle({GroupID: selectedGroup.ID})"/>
+            <q-btn v-if="articles.length < 8" icon="add" color="primary" flat
+                   @click="createArticle({GroupID: selectedGroup.ID})"/>
           </q-card-actions>
         </q-card>
         <q-card flat>
@@ -120,9 +139,40 @@
             </q-card>
           </q-card-section>
           <q-card-actions align="center">
-            <q-btn icon="add" v-if="cards.length < 8" flat color="primary" @click="createCard({GroupID: selectedGroup.ID})"/>
+            <q-btn icon="add" v-if="cards.length < 8" flat color="primary"
+                   @click="createCard({GroupID: selectedGroup.ID})"/>
           </q-card-actions>
         </q-card>
+      </q-card-section>
+    </q-card>
+    <div class="text-h5 q-pt-lg">已生成数据的公众号列表：</div>
+    <q-card>
+      <q-card-section>
+        <q-select v-model="selectedAppliedApp" :options="appliedApps" option-value="Appid" label="已生成数据的公众号"
+                  style="min-width: 120px">
+          <template v-slot:option="scope">
+            <q-item
+              v-bind="scope.itemProps"
+              v-on="scope.itemEvents"
+            >
+              <q-item-section>
+                <q-item-label>{{ getAppName(scope.opt.Appid) }} - {{ scope.opt.GroupName }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </q-card-section>
+      <q-card-section v-if="selectedAppliedApp">
+
+        <div class="row justify-between items-center">
+          <div class="text-h6">
+            {{ getAppName(selectedAppliedApp.Appid) }} - {{ selectedAppliedApp.GroupName }}
+          </div>
+          <div>
+            <q-btn flat dense color="primary" label="删除数据"
+                   @click="cancel(selectedGroup.ID)"/>
+          </div>
+        </div>
       </q-card-section>
     </q-card>
   </q-page>
@@ -150,7 +200,9 @@ export default {
         }
       ],
       appOptions: [],
-      selectedApps: []
+      selectedApps: [],
+      appliedApps: [],
+      selectedAppliedApp: null
     }
   },
   watch: {
@@ -180,15 +232,39 @@ export default {
         this.apps = data.Data
       }
     })
+    this.getAppliedApps()
   },
   methods: {
+    getAppName (appid) {
+      for (const app of this.apps) {
+        if (app.Appid === appid) {
+          return app.NickName
+        }
+      }
+      return appid + ' 已删除的公众号？'
+    },
+    getAppliedApps () {
+      this.$axios.get('/subscribe/msg/group/applied-apps').then(data => {
+        data = data.data
+        if (data && data.Data) {
+          this.appliedApps = data.Data
+        }
+      })
+    },
     openDialog (ref) {
       this.$refs[ref][0].openDialog()
     },
     filterFn (val, update) {
       if (val === '') {
         update(() => {
-          this.appOptions = this.apps
+          this.appOptions = this.apps.filter(v => {
+            for (const appliedApp of this.appliedApps) {
+              if (appliedApp.Appid === v.Appid) {
+                return false
+              }
+            }
+            return true
+          })
 
           // with Quasar v1.7.4+
           // here you have access to "ref" which
@@ -198,12 +274,20 @@ export default {
       }
 
       update(() => {
-        this.appOptions = this.apps.filter(v => v.NickName.indexOf(val) > -1)
+        this.appOptions = this.apps.filter(v => {
+          for (const appliedApp of this.appliedApps) {
+            if (appliedApp.Appid === v.Appid) {
+              return false
+            }
+          }
+          return v.NickName.indexOf(val) > -1
+        })
       })
     },
     appendGroup () {
       const group = {
         Name: '新建分组',
+        IsDefault: '',
         ID: 0
       }
       this.$axios.put('/subscribe/msg/group', group).then(data => {
@@ -229,19 +313,23 @@ export default {
         this.applying = false
       })
     },
-    reset () {
-      this.$axios.delete('/subscribe/msg/group/cancel', { params: { Appids: this.selectedApps } }).then(data => {
+    cancel () {
+      this.$axios.delete('/subscribe/msg/group/cancel', { params: { Appids: [this.selectedAppliedApp.Appid] } }).then(data => {
         data = data.data
         if (data && data.Message) {
           this.$q.notify(data.Message)
+          for (let i = 0; i < this.appliedApps.length; i++) {
+            if (this.appliedApps[i].Appid === this.selectedAppliedApp.Appid) {
+              this.appliedApps.splice(i, 1)
+              if (i > 1) {
+                this.selectedAppliedApp = this.appliedApps[i - 1]
+              }
+            }
+          }
         }
       })
     },
-    saveGroup (name, id) {
-      const group = {
-        Name: name,
-        ID: id
-      }
+    saveGroup (group) {
       this.$axios.put('/subscribe/msg/group', group).then(data => {
         data = data.data
         if (data && data.Message) {

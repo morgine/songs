@@ -220,19 +220,19 @@
           </q-item-section>
           <q-item-section>公众号菜单</q-item-section>
         </q-item>
-        <q-item
-          clickable
-          v-ripple
-          :active="link === 'app-groups'"
-          @click="link = 'app-groups'"
-          active-class="my-menu-link"
-          to="/app-groups"
-        >
-          <q-item-section avatar>
-            <q-icon name="send"/>
-          </q-item-section>
-          <q-item-section>公众号分组</q-item-section>
-        </q-item>
+<!--        <q-item-->
+<!--          clickable-->
+<!--          v-ripple-->
+<!--          :active="link === 'app-groups'"-->
+<!--          @click="link = 'app-groups'"-->
+<!--          active-class="my-menu-link"-->
+<!--          to="/app-groups"-->
+<!--        >-->
+<!--          <q-item-section avatar>-->
+<!--            <q-icon name="send"/>-->
+<!--          </q-item-section>-->
+<!--          <q-item-section>公众号分组</q-item-section>-->
+<!--        </q-item>-->
         <q-item
           clickable
           v-ripple

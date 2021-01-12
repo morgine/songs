@@ -146,9 +146,9 @@ export default {
         sortable: true
       },
       {
-        name: 'income_outcome_rate',
-        label: '当日收支比率',
-        field: row => row.outcome ? `${(row.income / row.outcome).toFixed(2)}%` : '0.00%',
+        name: 'expected_payback_days',
+        label: '预计回本天数',
+        field: row => row.income ? Math.ceil((row.total_outcome - row.total_income) / row.income) : '#',
         sortable: true
       },
       {
@@ -228,10 +228,15 @@ export default {
       loading: false,
       columns: columns,
       appColumns: [
+        // {
+        //   name: 'appid',
+        //   label: 'APPID',
+        //   field: 'appid'
+        // },
         {
-          name: 'appid',
-          label: 'APPID',
-          field: 'appid'
+          name: 'index',
+          label: '#',
+          field: 'index'
         },
         {
           name: 'nickname',
