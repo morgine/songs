@@ -38,6 +38,7 @@
         :title="`总量-${date.date}`"
         :data="[date.data]"
         :columns="columns"
+        class="q-mt-xl"
         row-key="cumulate_user"
       >
         <template v-slot:top-right>
@@ -57,6 +58,7 @@
         :columns="appColumns"
         :sort-method="sortColumns"
         row-key="appid"
+        class="q-mt-xl"
       >
         <template v-slot:top-right>
           <q-btn
@@ -68,11 +70,13 @@
           />
         </template>
         <template v-slot:body-cell-total_outcome="props">
-          <q-td>
+          <q-td class="text-right">
             {{ formatMoney(props.row.total_outcome) }}
-            <q-popup-edit :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100" title="设置总支出" buttons
+            <q-popup-edit :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100"
+                          title="设置总支出" buttons
                           @save="saveTotalOutcome($event, props.row.appid)">
-              <q-input :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100" dense autofocus/>
+              <q-input :value="formatMoney(props.row.total_outcome)" @input="props.row.total_outcome=$event*100" dense
+                       autofocus/>
             </q-popup-edit>
           </q-td>
         </template>
@@ -262,7 +266,15 @@ export default {
       this.$axios.get('/user-statistics', { params: this.params }).then(data => {
         data = data.data
         if (data && data.Data) {
-          this.dates = data.Data
+          data = data.Data
+          for (const date of data) {
+            let i = 1
+            for (const app of date.apps) {
+              app.index = i
+              i++
+            }
+          }
+          this.dates = data
           this.loading = false
         }
       })

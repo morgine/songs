@@ -1,5 +1,6 @@
 <template>
   <q-page padding>
+    <div class="text-h4 q-mt-lg q-mb-lg">编辑&生成数据：</div>
     <div class="row items-center q-gutter-lg">
       <q-select v-model="selectedGroup" :options="groups" option-label="Name" option-value="ID" label="选择分组"
                 style="min-width: 120px">
@@ -41,7 +42,7 @@
           <div class="text-h6">默认分组</div>
           <div class="text-caption">未生成数据的公众号将使用默认数据</div>
         </div>
-        <div class="row justify-between items-center">
+        <div v-else class="row justify-between items-center">
           <div class="text-h6 cursor-pointer">
             {{ selectedGroup.Name }}
             <q-icon name="edit"/>
@@ -145,8 +146,8 @@
         </q-card>
       </q-card-section>
     </q-card>
-    <div class="text-h5 q-pt-lg">已生成数据的公众号列表：</div>
-    <q-card>
+    <div class="text-h4 q-mt-xl q-mb-lg">已生成数据的公众号列表：</div>
+    <q-card flat>
       <q-card-section>
         <q-select v-model="selectedAppliedApp" :options="appliedApps" option-value="Appid" label="已生成数据的公众号"
                   style="min-width: 120px">
@@ -215,7 +216,11 @@ export default {
     this.$axios.get('/subscribe/msg/groups').then(data => {
       data = data.data
       if (data && data.Data) {
-        this.groups = data.Data
+        data = data.Data
+        if (data.length > 0) {
+          this.groups = data
+          // this.selectedGroup = data[0]
+        }
       }
     })
     const params = {
