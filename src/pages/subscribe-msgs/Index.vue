@@ -53,7 +53,7 @@
           </div>
           <div>
             <q-btn v-if="groups.length > 1" flat dense color="primary" label="删除分组"
-                   @click="confirmDeleteGroup(selectedGroup.ID)"/>
+                   @click="confirmDeleteGroup(selectedGroup)"/>
           </div>
         </div>
       </q-card-section>
@@ -370,6 +370,7 @@ export default {
           for (let i = 0; i < this.groups.length; i++) {
             if (this.groups[i].ID === group.ID) {
               this.groups.splice(i, 1)
+              this.selectedGroup = null
               break
             }
           }

@@ -194,19 +194,19 @@
 <!--          </q-item-section>-->
 <!--          <q-item-section>图片管理</q-item-section>-->
 <!--        </q-item>-->
-        <q-item
-          clickable
-          v-ripple
-          :active="link === 'subscribes'"
-          @click="link = 'subscribes'"
-          active-class="my-menu-link"
-          to="/subscribes"
-        >
-          <q-item-section avatar>
-            <q-icon name="send"/>
-          </q-item-section>
-          <q-item-section>关注回复</q-item-section>
-        </q-item>
+<!--        <q-item-->
+<!--          clickable-->
+<!--          v-ripple-->
+<!--          :active="link === 'subscribes'"-->
+<!--          @click="link = 'subscribes'"-->
+<!--          active-class="my-menu-link"-->
+<!--          to="/subscribes"-->
+<!--        >-->
+<!--          <q-item-section avatar>-->
+<!--            <q-icon name="send"/>-->
+<!--          </q-item-section>-->
+<!--          <q-item-section>关注回复</q-item-section>-->
+<!--        </q-item>-->
         <q-item
           clickable
           v-ripple
