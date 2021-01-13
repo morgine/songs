@@ -151,6 +151,9 @@
       <q-card-section>
         <q-select v-model="selectedAppliedApp" :options="appliedApps" option-value="Appid" label="已生成数据的公众号"
                   style="min-width: 120px">
+          <template v-slot:selected-item="scope">
+            {{ getAppName(scope.opt.Appid) }} - {{ scope.opt.GroupName }}
+          </template>
           <template v-slot:option="scope">
             <q-item
               v-bind="scope.itemProps"
@@ -171,7 +174,7 @@
           </div>
           <div>
             <q-btn flat dense color="primary" label="删除数据"
-                   @click="cancel(selectedGroup.ID)"/>
+                   @click="cancelApply()"/>
           </div>
         </div>
       </q-card-section>
@@ -316,13 +319,15 @@ export default {
         data = data.data
         if (data && data.Message) {
           this.$q.notify(data.Message)
+          this.appliedApps.concat(this.selectedApps)
+          this.selectedApps = []
         }
         this.applying = false
       }).catch(() => {
         this.applying = false
       })
     },
-    cancel () {
+    cancelApply () {
       this.$axios.delete('/subscribe/msg/group/cancel', { params: { Appids: [this.selectedAppliedApp.Appid] } }).then(data => {
         data = data.data
         if (data && data.Message) {
@@ -332,6 +337,8 @@ export default {
               this.appliedApps.splice(i, 1)
               if (i > 1) {
                 this.selectedAppliedApp = this.appliedApps[i - 1]
+              } else {
+                this.selectedAppliedApp = null
               }
             }
           }
