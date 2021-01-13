@@ -305,10 +305,14 @@ export default {
     },
     apply () {
       this.applying = true
-      this.$axios.post('/subscribe/msg/group/apply', {
-        Appids: this.selectedApps,
-        GroupID: this.selectedGroup
-      }).then(data => {
+      const params = {
+        GroupID: this.selectedGroup.ID,
+        Appids: []
+      }
+      for (const app of this.selectedApps) {
+        params.Appids.push(app.Appid)
+      }
+      this.$axios.post('/subscribe/msg/group/apply', params).then(data => {
         data = data.data
         if (data && data.Message) {
           this.$q.notify(data.Message)
