@@ -244,7 +244,7 @@
           <q-item-section avatar>
             <q-icon name="send"/>
           </q-item-section>
-          <q-item-section>关注回复模板</q-item-section>
+          <q-item-section>关注回复</q-item-section>
         </q-item>
         <!--        <q-item-->
         <!--          clickable-->
