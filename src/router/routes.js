@@ -72,6 +72,10 @@ const routes = [
       {
         path: '/subscribe-msgs',
         component: () => import('pages/subscribe-msgs/Index.vue')
+      },
+      {
+        path: '/app-group-msg-event',
+        component: () => import('pages/group-msg/Event.vue')
       }
     ]
   },

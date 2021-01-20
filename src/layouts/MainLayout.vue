@@ -109,7 +109,7 @@
       bordered
       content-class="bg-grey-1"
     >
-      <q-list bordered padding class="rounded-borders text-primary">
+      <q-list padding class="text-primary">
         <q-item
           clickable
           v-ripple
@@ -246,49 +246,26 @@
           </q-item-section>
           <q-item-section>关注回复</q-item-section>
         </q-item>
-        <!--        <q-item-->
-        <!--          clickable-->
-        <!--          v-ripple-->
-        <!--          :active="link === 'trash'"-->
-        <!--          @click="link = 'trash'"-->
-        <!--          active-class="my-menu-link"-->
-        <!--        >-->
-        <!--          <q-item-section avatar>-->
-        <!--            <q-icon name="delete"/>-->
-        <!--          </q-item-section>-->
-
-        <!--          <q-item-section>Trash</q-item-section>-->
-        <!--        </q-item>-->
-
-        <!--        <q-separator spaced/>-->
-
-        <!--        <q-item-->
-        <!--          clickable-->
-        <!--          v-ripple-->
-        <!--          :active="link === 'settings'"-->
-        <!--          @click="link = 'settings'"-->
-        <!--          active-class="my-menu-link"-->
-        <!--        >-->
-        <!--          <q-item-section avatar>-->
-        <!--            <q-icon name="settings"/>-->
-        <!--          </q-item-section>-->
-
-        <!--          <q-item-section>Settings</q-item-section>-->
-        <!--        </q-item>-->
-
-        <!--        <q-item-->
-        <!--          clickable-->
-        <!--          v-ripple-->
-        <!--          :active="link === 'help'"-->
-        <!--          @click="link = 'help'"-->
-        <!--          active-class="my-menu-link"-->
-        <!--        >-->
-        <!--          <q-item-section avatar>-->
-        <!--            <q-icon name="help"/>-->
-        <!--          </q-item-section>-->
-
-        <!--          <q-item-section>Help</q-item-section>-->
-        <!--        </q-item>-->
+        <q-expansion-item
+          icon="send"
+          label="图文消息"
+        >
+          <q-list padding class="text-primary">
+            <q-item
+              clickable
+              v-ripple
+              :active="link === 'app-group-msg-event'"
+              @click="link = 'app-group-msg-event'"
+              active-class="my-menu-link"
+              to="/app-group-msg-event"
+            >
+<!--              <q-item-section avatar>-->
+<!--                <q-icon name="send"/>-->
+<!--              </q-item-section>-->
+              <q-item-section>消息统计</q-item-section>
+            </q-item>
+          </q-list>
+        </q-expansion-item>
       </q-list>
     </q-drawer>
 
