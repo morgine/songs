@@ -26,7 +26,7 @@
 <script>
 import { date } from 'quasar'
 
-const start = Date.now()
+const start = date.startOfDate(Date.now(), 'day')
 const oneDateTime = 1000 * 60 * 60 * 24
 const end = start + oneDateTime
 
@@ -110,8 +110,8 @@ export default {
       this.evtApps = []
       this.$axios.get('/app-group-msg-result', {
         params: {
-          Start: this.start / 1000,
-          End: this.end / 1000
+          Start: Math.ceil(this.start / 1000),
+          End: Math.ceil(this.end / 1000)
         }
       }).then(data => {
         data = data.data
