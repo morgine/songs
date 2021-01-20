@@ -26,9 +26,9 @@
 <script>
 import { date } from 'quasar'
 
-const start = date.startOfDate(Date.now(), 'day')
-const oneDateTime = 1000 * 60 * 60 * 24
-const end = start + oneDateTime
+const start = Date.now()
+// const oneDateTime = 1000 * 60 * 60 * 24
+// const end = start + oneDateTime
 
 export default {
   name: 'Event',
@@ -36,7 +36,7 @@ export default {
     return {
       events: [],
       start: start,
-      end: end,
+      // end: end,
       apps: [],
       evtApps: [],
       columns: [
@@ -85,7 +85,7 @@ export default {
       },
       set (val) {
         this.start = date.extractDate(val, 'YYYY-MM-DD')
-        this.end = this.start + oneDateTime
+        // this.end = this.start + oneDateTime
       }
     }
   },
@@ -108,10 +108,11 @@ export default {
     getEvents () {
       this.loading = true
       this.evtApps = []
+      const start = Math.ceil(date.startOfDate(this.start, 'day') / 1000)
       this.$axios.get('/app-group-msg-result', {
         params: {
-          Start: Math.ceil(this.start / 1000),
-          End: Math.ceil(this.end / 1000)
+          Start: start,
+          End: start + 3600 * 24
         }
       }).then(data => {
         data = data.data
