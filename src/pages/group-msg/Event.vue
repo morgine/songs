@@ -14,12 +14,24 @@
           </q-icon>
         </template>
       </q-input>
-      <q-btn label="获取" @click="getEvents"></q-btn>
+      <q-btn label="获取" @click="getEvents" :loading="loading"></q-btn>
     </div>
-    <q-table :data="evtApps"
-             :columns="columns"
-             row-key="Appid"
-             class="q-mt-xl"/>
+    <q-table
+      title="总和"
+      :data="sums"
+      :columns="sumsColumns"
+      align="center"
+      :loading="loading"
+      class="q-mt-xl">
+      <template v-slot:bottom></template>
+    </q-table>
+    <q-table
+      title="详细数据"
+      :data="evtApps"
+      :columns="columns"
+      :loading="loading"
+      row-key="Appid"
+      class="q-mt-xl"/>
   </q-page>
 </template>
 
@@ -38,6 +50,33 @@ export default {
       start: start,
       // end: end,
       apps: [],
+      sums: [],
+      sumsColumns: [
+        {
+          name: 'AppNum',
+          label: '已发送公众号数量',
+          field: 'AppNum',
+          align: 'center'
+        },
+        {
+          name: 'TotalCount',
+          label: '标签下的粉丝数',
+          field: 'TotalCount',
+          align: 'center'
+        },
+        {
+          name: 'FilterCount',
+          label: '发送消息的粉丝数',
+          field: 'FilterCount',
+          align: 'center'
+        },
+        {
+          name: 'SentCount',
+          label: '发送成功粉丝数',
+          field: 'SentCount',
+          align: 'center'
+        }
+      ],
       evtApps: [],
       columns: [
         {
@@ -58,20 +97,14 @@ export default {
         },
         {
           name: 'FilterCount',
-          label: '接收到消息的粉丝数',
+          label: '发送消息的粉丝数',
           field: 'FilterCount',
           sortable: true
         },
         {
           name: 'SentCount',
-          label: '总发送粉丝数',
+          label: '发送成功粉丝数',
           field: 'SentCount',
-          sortable: true
-        },
-        {
-          name: 'ErrorCount',
-          label: '发送失败粉丝数',
-          field: 'ErrorCount',
           sortable: true
         }
       ],
@@ -108,6 +141,7 @@ export default {
     getEvents () {
       this.loading = true
       this.evtApps = []
+      this.sums = []
       const start = Math.ceil(date.startOfDate(this.start, 'day') / 1000)
       this.$axios.get('/app-group-msg-result', {
         params: {
@@ -118,6 +152,12 @@ export default {
         data = data.data
         if (data && data.Data) {
           const evtApps = []
+          const sum = {
+            AppNum: 0,
+            TotalCount: 0,
+            FilterCount: 0,
+            SentCount: 0
+          }
           for (const app of this.apps) {
             const appEvt = {
               Appid: app.Appid,
@@ -140,12 +180,17 @@ export default {
                 appEvt.FilterCount = evt.FilterCount
                 appEvt.SentCount = evt.SentCount
                 appEvt.ErrorCount = evt.ErrorCount
+                sum.AppNum++
+                sum.TotalCount += evt.TotalCount
+                sum.FilterCount += evt.FilterCount
+                sum.SentCount += evt.SentCount
                 break
               }
             }
             evtApps.push(appEvt)
           }
           this.evtApps = evtApps
+          this.sums.push(sum)
         }
         this.loading = false
       })
