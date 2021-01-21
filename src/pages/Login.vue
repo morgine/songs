@@ -62,7 +62,7 @@ export default {
           const token = data.Data
           localStorage.setItem('Authorization', token)
           this.$axios.defaults.headers.common.Authorization = token
-          this.$router.replace('/main')
+          this.$router.replace('/')
         } else {
           this.$q.notify({
             position: 'top-right',

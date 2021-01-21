@@ -1,29 +1,11 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/IndexLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
         component: () => import('pages/Index.vue')
-      },
-      {
-        path: '/login',
-        component: () => import('pages/Login.vue')
-      },
-      {
-        path: '/register',
-        component: () => import('pages/Register.vue')
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '/main',
-        component: () => import('pages/Main.vue')
       },
       {
         path: '/settings',
@@ -77,6 +59,20 @@ const routes = [
         path: '/app-group-msg-event',
         component: () => import('pages/group-msg/Event.vue')
       }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/EmptyLayout.vue'),
+    children: [
+      {
+        path: '/login',
+        component: () => import('pages/Login.vue')
+      }
+      // {
+      //   path: '/register',
+      //   component: () => import('pages/Register.vue')
+      // }
     ]
   },
   // Always leave this as last one,

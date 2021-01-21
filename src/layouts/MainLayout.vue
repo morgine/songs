@@ -119,7 +119,7 @@
           to="/dashboard"
         >
           <q-item-section avatar>
-            <q-icon name="inbox"/>
+            <q-icon name="dashboard"/>
           </q-item-section>
 
           <q-item-section>仪表板</q-item-section>
@@ -134,7 +134,7 @@
           to="/apps"
         >
           <q-item-section avatar>
-            <q-icon name="send"/>
+            <q-icon name="apps"/>
           </q-item-section>
 
           <q-item-section>公众号列表</q-item-section>
@@ -148,7 +148,7 @@
           to="/user-tag"
         >
           <q-item-section avatar>
-            <q-icon name="send"/>
+            <q-icon name="bookmarks"/>
           </q-item-section>
 
           <q-item-section>关注标签</q-item-section>
@@ -162,7 +162,7 @@
           to="/statistics"
         >
           <q-item-section avatar>
-            <q-icon name="send"/>
+            <q-icon name="analytics"/>
           </q-item-section>
 
           <q-item-section>数据统计</q-item-section>
@@ -216,7 +216,7 @@
           to="/menus"
         >
           <q-item-section avatar>
-            <q-icon name="send"/>
+            <q-icon name="menu"/>
           </q-item-section>
           <q-item-section>公众号菜单</q-item-section>
         </q-item>
@@ -242,15 +242,15 @@
           to="/subscribe-msgs"
         >
           <q-item-section avatar>
-            <q-icon name="send"/>
+            <q-icon name="message"/>
           </q-item-section>
           <q-item-section>关注回复</q-item-section>
         </q-item>
-        <q-expansion-item
-          icon="send"
-          label="图文消息"
-        >
-          <q-list padding class="text-primary">
+<!--        <q-expansion-item-->
+<!--          icon="send"-->
+<!--          label="图文消息"-->
+<!--        >-->
+<!--          <q-list padding class="text-primary">-->
             <q-item
               clickable
               v-ripple
@@ -259,13 +259,13 @@
               active-class="my-menu-link"
               to="/app-group-msg-event"
             >
-<!--              <q-item-section avatar>-->
-<!--                <q-icon name="send"/>-->
-<!--              </q-item-section>-->
+              <q-item-section avatar>
+                <q-icon name="mark_chat_read"/>
+              </q-item-section>
               <q-item-section>消息统计</q-item-section>
             </q-item>
-          </q-list>
-        </q-expansion-item>
+<!--          </q-list>-->
+<!--        </q-expansion-item>-->
       </q-list>
     </q-drawer>
 
