@@ -31,14 +31,24 @@
       :columns="columns"
       :loading="loading"
       row-key="Appid"
-      class="q-mt-xl"/>
+      class="q-mt-xl">
+      <template v-slot:body-cell-Manager="props">
+        <q-td class="text-right">
+          {{ props.row.Manager }}
+          <q-popup-edit v-model="props.row.Manager" title="设置管理员" buttons
+                        @save="saveAppManager($event, props.row.appid)">
+            <q-input v-model="props.row.Manager" dense autofocus/>
+          </q-popup-edit>
+        </q-td>
+      </template>
+    </q-table>
   </q-page>
 </template>
 
 <script>
 import { date } from 'quasar'
 
-const start = Date.now()
+const start = Date.now() - (1000 * 60 * 60 * 24)
 // const oneDateTime = 1000 * 60 * 60 * 24
 // const end = start + oneDateTime
 
@@ -85,6 +95,11 @@ export default {
           field: 'NickName'
         },
         {
+          name: 'Manager',
+          label: '管理员',
+          field: 'Manager'
+        },
+        {
           name: 'Status',
           label: '状态',
           field: 'Status'
@@ -118,7 +133,6 @@ export default {
       },
       set (val) {
         this.start = date.extractDate(val, 'YYYY-MM-DD')
-        // this.end = this.start + oneDateTime
       }
     }
   },
@@ -133,7 +147,22 @@ export default {
     this.$axios.get('/apps', { params: params }).then(data => {
       data = data.data
       if (data && data.Data) {
-        this.apps = data.Data
+        const apps = data.Data
+        this.$axios.get('/apps-manager').then(data => {
+          data = data.data
+          if (data && data.Data) {
+            const managers = data.Data
+            for (const manager of managers) {
+              for (const app of apps) {
+                if (manager.Appid === app.Appid) {
+                  app.Manager = manager.Manager
+                  break
+                }
+              }
+            }
+          }
+          this.apps = apps
+        })
       }
     })
   },
@@ -162,6 +191,7 @@ export default {
             const appEvt = {
               Appid: app.Appid,
               NickName: app.NickName,
+              Manager: app.Manager,
               Status: '',
               // tag_id下粉丝数；或者openid_list中的粉丝数
               TotalCount: 0,
@@ -193,6 +223,17 @@ export default {
           this.sums.push(sum)
         }
         this.loading = false
+      })
+    },
+    saveAppManager (value, appid) {
+      this.$axios.post('/app-manager', {
+        Appid: appid,
+        Payout: value
+      }).then(data => {
+        data = data.data
+        if (data && data.Message) {
+          this.$q.notify(data.Message)
+        }
       })
     }
   }
