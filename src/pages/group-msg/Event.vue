@@ -34,7 +34,7 @@
       class="q-mt-xl">
       <template v-slot:body-cell-Manager="props">
         <q-td class="text-right">
-          {{ props.row.Manager }}
+          {{ props.row.Manager ? props.row.Manager : '点击设置' }}
           <q-popup-edit v-model="props.row.Manager" title="设置管理员" buttons
                         @save="saveAppManager($event, props.row.appid)">
             <q-input v-model="props.row.Manager" dense autofocus/>
@@ -205,7 +205,7 @@ export default {
             }
             for (const evt of data.Data) {
               if (evt.Appid === app.Appid) {
-                appEvt.Status = evt.Status
+                appEvt.Status = evt.Status === 'send success' ? '成功' : evt.Status
                 appEvt.TotalCount = evt.TotalCount
                 appEvt.FilterCount = evt.FilterCount
                 appEvt.SentCount = evt.SentCount
@@ -228,7 +228,7 @@ export default {
     saveAppManager (value, appid) {
       this.$axios.post('/app-manager', {
         Appid: appid,
-        Payout: value
+        Manager: value
       }).then(data => {
         data = data.data
         if (data && data.Message) {
