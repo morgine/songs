@@ -48,7 +48,7 @@
 <script>
 import { date } from 'quasar'
 
-const start = Date.now() - (1000 * 60 * 60 * 24)
+const start = Date.now()
 // const oneDateTime = 1000 * 60 * 60 * 24
 // const end = start + oneDateTime
 
