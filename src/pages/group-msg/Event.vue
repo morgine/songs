@@ -97,12 +97,14 @@ export default {
         {
           name: 'Manager',
           label: '管理员',
-          field: 'Manager'
+          field: 'Manager',
+          sortable: true
         },
         {
           name: 'Status',
           label: '状态',
-          field: 'Status'
+          field: 'Status',
+          sortable: true
         },
         {
           name: 'TotalCount',
