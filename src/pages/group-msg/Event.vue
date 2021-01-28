@@ -36,7 +36,7 @@
         <q-td class="text-right">
           {{ props.row.Manager ? props.row.Manager : '点击设置' }}
           <q-popup-edit v-model="props.row.Manager" title="设置管理员" buttons
-                        @save="saveAppManager($event, props.row.appid)">
+                        @save="saveAppManager($event, props.row.Appid)">
             <q-input v-model="props.row.Manager" dense autofocus/>
           </q-popup-edit>
         </q-td>
